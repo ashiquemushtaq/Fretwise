@@ -58,6 +58,7 @@ document.getElementById('start-quiz').addEventListener('click', () => {
   document.getElementById('start-quiz').textContent = 'Play Again';
   feedbackElement.textContent = ''; // Clear feedback on "Play Again"
   feedbackElement.className = ''; // Remove any feedback styling
+  document.getElementById('guess-note').value = '';
   startNewRound();
 });
 
