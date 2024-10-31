@@ -129,6 +129,7 @@ document.getElementById('submit-guess').addEventListener('click', () => {
       feedbackElement.textContent = `Correct! Score: ${score}. Well done! Starting next round...`;
       feedbackElement.className = 'correct';
       setTimeout(startNewRound, 1000); // Automatically start a new round after a short delay
+      document.getElementById('guess-note').value = '';
     } else {
       feedbackElement.textContent = `Incorrect. The correct answer was ${correctNote.join(' or ')}. Your score was: ${score}. Click "Play Again" to try from scratch.`;
       feedbackElement.className = 'incorrect';
