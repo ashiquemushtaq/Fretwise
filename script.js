@@ -31,7 +31,7 @@ function createFretboard() {
   for (let string = 6; string >= 1; string--) {
     const stringLabel = document.createElement('div');
     stringLabel.classList.add('string-label');
-    stringLabel.textContent = `${stringBaseNotes[string]} String`; // Use string names
+    stringLabel.textContent = `${stringBaseNotes[string]}`;
     fretboard.appendChild(stringLabel);
 
     // Start from fret 1 to exclude open notes
