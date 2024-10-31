@@ -1,0 +1,218 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;
+    color: #333;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .string-selection {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .string-selection label {
+    font-size: 1rem;
+  }
+  
+  /* Fretboard Styling */
+  .fretboard {
+    display: grid;
+    grid-template-columns: 80px repeat(12, 50px); /* First column for labels, then 12 frets */
+    grid-template-rows: repeat(6, 50px); /* 6 strings */
+    gap: 5px;
+    max-width: 700px;
+    margin-top: 20px;
+  }
+  
+  .string-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #444;
+  }
+  
+  .fret {
+    position: relative;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .fret:nth-child(odd) {
+    background-color: #eaeaea; /* Alternating colors for frets */
+  }
+  
+  /* Note Circle */
+  .note-circle {
+    width: 20px;
+    height: 20px;
+    background-color: #ffd700; /* Yellow for visibility */
+    border-radius: 50%;
+    display: none;
+  }
+
+  /* String Selection Styling */
+.string-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.string-selection label {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+
+/* Special Markers for Frets 3, 5, 7, 9 */
+.fret[data-fret="3"]::before,
+.fret[data-fret="5"]::before,
+.fret[data-fret="7"]::before,
+.fret[data-fret="9"]::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background-color: #333;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Special Double Marker for the 12th Fret */
+.fret[data-fret="12"]::before,
+.fret[data-fret="12"]::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background-color: #333;
+  border-radius: 50%;
+  position: absolute;
+  top: 20%;
+}
+
+.fret[data-fret="12"]::after {
+  top: 70%; /* Position the second dot lower for the 12th fret */
+}
+
+  
+  /* Button and Input Styling */
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  input[type="text"] {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: border-color 0.3s ease;
+  }
+  
+  input[type="text"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+  }
+  
+  /* Feedback Styling */
+  #feedback {
+    font-size: 1rem;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 300px;
+    text-align: center;
+  }
+  
+  #feedback.correct {
+    color: #4CAF50;
+    background-color: #e8f5e9;
+    border: 1px solid #4CAF50;
+  }
+  
+  #feedback.incorrect {
+    color: #d32f2f;
+    background-color: #fdecea;
+    border: 1px solid #d32f2f;
+  }
+  
+  /* Answer Input Section */
+  .answer-section {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  /* Mobile Responsive */
+  @media (max-width: 600px) {
+    .fretboard {
+      grid-template-columns: 60px repeat(12, 35px);
+      gap: 3px;
+    }
+  
+    .fret {
+      width: 35px;
+      height: 35px;
+    }
+  
+    .note-circle {
+      width: 15px;
+      height: 15px;
+    }
+  
+    button {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+  
+    input[type="text"] {
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+  }
+  

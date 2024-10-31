@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guitar Fretboard Memorization</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Guitar Fretboard Memorization</h1>
+  
+  <!-- String Selection -->
+  <div class="string-selection">
+    <h2>Select Strings to Memorize:</h2>
+    <label><input type="checkbox" id="string-6" checked> E (6th String)</label>
+    <label><input type="checkbox" id="string-5" checked> A (5th String)</label>
+    <label><input type="checkbox" id="string-4" checked> D (4th String)</label>
+    <label><input type="checkbox" id="string-3" checked> G (3rd String)</label>
+    <label><input type="checkbox" id="string-2" checked> B (2nd String)</label>
+    <label><input type="checkbox" id="string-1" checked> E (1st String)</label>
+  </div>
+
+  <!-- Fretboard Display -->
+  <div class="fretboard">
+    <!-- We'll populate frets using JavaScript -->
+  </div>
+
+  <!-- Start Quiz Button -->
+  <button id="start-quiz">Start Quiz</button>
+
+  <!-- Answer Input Section -->
+  <div class="answer-section">
+    <label for="guess-note">Guess the Note:</label>
+    <input type="text" id="guess-note" placeholder="e.g., C, D#, G">
+    <button id="submit-guess">Submit Guess</button>
+  </div>
+
+  <!-- Feedback Section -->
+  <p id="feedback"></p>
+
+  <script src="script.js"></script>
+</body>
+</html>
