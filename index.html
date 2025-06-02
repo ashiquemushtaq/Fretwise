@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FretWise</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -16,7 +16,7 @@
         </audio>
 
         <div id="start-screen" class="screen active">
-            <h1 class="pixel-text title">FretWise</h1>
+            <h1 class="pixel-text title">FretWiset</h1>
             <p class="pixel-text subtitle">Master the Notes!</p>
 
             <div class="button-group">
@@ -44,13 +44,12 @@
         </div>
 
         <div id="game-screen" class="screen hidden">
-            <h1 class="pixel-text title">FretWise</h1>
+            <h1 class="pixel-text title">FretWiser</h1>
 
             <div class="game-area">
                 <div class="score-display pixel-text">
                     SCORE: <span id="score">0</span>
-                    TIME: <span id="time">60</span>s
-                </div>
+                    TIME: <span id="time">55</span><span class="time-suffix"> s</span> </div>
 
                 <div id="fretboard-container">
                     </div>
@@ -60,7 +59,7 @@
                     <p id="feedback" class="feedback-message"></p>
                 </div>
 
-                <button id="start-button" class="pixel-button">START GAME</button>
+                <button id="start-button" class="pixel-button">RESTART GAME</button>
             </div>
             <button id="back-to-main-button" class="pixel-button small-button top-left icon-button">
                 <i class="fas fa-home"></i>
