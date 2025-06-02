@@ -1,45 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fretwise</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FretWise</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <h1>Fretwise</h1>
-  <h2>Master the fretboard, one note at a time.</h2>
-  
-  <!-- String Selection -->
-  <div class="string-selection">
-    <h2>Select Strings to Memorize:</h2>
-    <label><input type="checkbox" id="string-6" checked> E (6th String)</label>
-    <label><input type="checkbox" id="string-5" checked> A (5th String)</label>
-    <label><input type="checkbox" id="string-4" checked> D (4th String)</label>
-    <label><input type="checkbox" id="string-3" checked> G (3rd String)</label>
-    <label><input type="checkbox" id="string-2" checked> B (2nd String)</label>
-    <label><input type="checkbox" id="string-1" checked> E (1st String)</label>
-  </div>
+    <div class="container">
+        <audio id="background-music" loop>
+            <source src="pixel_music.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
 
-  <!-- Fretboard Display -->
-  <div class="fretboard">
-    <!-- We'll populate frets using JavaScript -->
-  </div>
+        <div id="start-screen" class="screen active">
+            <h1 class="pixel-text title">FretWise</h1>
+            <p class="pixel-text subtitle">Master the Notes!</p>
 
-  <!-- Start Quiz Button -->
-  <button id="start-quiz">Start Quiz</button>
+            <div class="button-group">
+                <button id="play-button" class="pixel-button">PLAY</button>
+                <button id="settings-button" class="pixel-button small-button">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
 
-  <!-- Answer Input Section -->
-  <div class="answer-section">
-    <label for="guess-note">Guess the Note:</label>
-    <input type="text" id="guess-note" placeholder="e.g., C, D#, G">
-    <button id="submit-guess">Submit Guess</button>
-  </div>
+        <div id="settings-screen" class="screen hidden">
+            <h1 class="pixel-text title">SETTINGS</h1>
+            <div class="settings-options">
+                <div class="setting-group">
+                    <p class="pixel-text setting-label">GAME MODE:</p>
+                    <label class="pixel-text radio-label">
+                        <input type="radio" name="gameMode" value="timed" checked> TIMED
+                    </label>
+                    <label class="pixel-text radio-label">
+                        <input type="radio" name="gameMode" value="untimed"> UNTIMED
+                    </label>
+                </div>
+            </div>
+            <button id="back-button" class="pixel-button">BACK</button>
+        </div>
 
-  <!-- Feedback Section -->
-  <p id="feedback"></p>
+        <div id="game-screen" class="screen hidden">
+            <h1 class="pixel-text title">FretWise</h1>
 
-  <script src="script.js"></script>
+            <div class="game-area">
+                <div class="score-display pixel-text">
+                    SCORE: <span id="score">0</span>
+                    TIME: <span id="time">60</span>s
+                </div>
+
+                <div id="fretboard-container">
+                    </div>
+
+                <div class="challenge-area pixel-text">
+                    <p>FIND THE NOTE: <strong id="target-note">_</strong></p>
+                    <p id="feedback" class="feedback-message"></p>
+                </div>
+
+                <button id="start-button" class="pixel-button">START GAME</button>
+            </div>
+            <button id="back-to-main-button" class="pixel-button small-button top-left icon-button">
+                <i class="fas fa-home"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
