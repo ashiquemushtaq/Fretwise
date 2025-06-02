@@ -1,219 +1,397 @@
-/* General Styling */
+/* Import Google Fonts for pixel style */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* --- General Pixel Styling --- */
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Press Start 2P', cursive; /* Apply pixel font */
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    min-height: 100vh;
+    background-color: #34495e; /* Darker, slightly blue background */
+    color: #ecf0f1; /* Light pixel text color */
     margin: 0;
     padding: 20px;
-    background-color: #f4f4f9;
-    color: #333;
-  }
-  
-  h1 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  h2 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-  }
-  
-  .string-selection {
-    display: flex;
-    gap: 10px;
+    box-sizing: border-box;
+    image-rendering: optimizeSpeed; /* For older browsers */
+    image-rendering: -moz-crisp-edges; /* For Firefox */
+    image-rendering: -webkit-optimize-contrast; /* For Chrome, Safari */
+    image-rendering: pixelated; /* Standard for modern browsers */
+    -ms-interpolation-mode: nearest-neighbor; /* For IE */
+}
+
+.container {
+    background-color: #2c3e50; /* Dark blue container */
+    border: 4px solid #1a252f; /* Thick pixel border */
+    border-radius: 0; /* Sharp corners */
+    box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.4); /* Pixel shadow */
+    padding: 30px;
+    text-align: center;
+    width: 100%;
+    max-width: 1200px; /* !!! INCREASED MAX-WIDTH HERE !!! */
+    box-sizing: content-box; /* Revert to default box model for pixel art sizing */
+}
+
+/* Pixel font class */
+.pixel-text {
+    font-family: 'Press Start 2P', cursive;
+    text-shadow: 2px 2px 0 #000; /* Subtle pixel shadow for text */
+}
+
+.title {
+    color: #ffeb3b; /* Bright yellow title */
+    font-size: 2.5em;
     margin-bottom: 20px;
-  }
-  
-  .string-selection label {
-    font-size: 1rem;
-  }
-  
-  /* Fretboard Styling */
-  .fretboard {
-    display: grid;
-    grid-template-columns: 80px repeat(12, 50px); /* First column for labels, then 12 frets */
-    grid-template-rows: repeat(6, 50px); /* 6 strings */
-    gap: 5px;
-    max-width: 700px;
-    margin-top: 20px;
-  }
-  
-  .string-label {
+}
+
+.subtitle {
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+/* Pixel Button Style */
+.pixel-button {
+    background-color: #27ae60; /* Green */
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 0; /* Sharp corners */
+    font-size: 1.3em;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    text-shadow: 2px 2px 0 #1e8449; /* Darker shadow for button text */
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.6); /* Button pixel shadow */
+    transition: all 0.05s ease-out; /* Small transition for pixel feel */
+    margin-top: 20px; /* Default margin for single buttons */
+}
+
+.pixel-button:hover {
+    background-color: #229954; /* Darker green on hover */
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.6); /* Smaller shadow on hover (pressed effect) */
+    transform: translate(2px, 2px); /* Simulate button press */
+}
+
+.pixel-button:active {
+    background-color: #1b6c3e; /* Even darker green */
+    box-shadow: none; /* No shadow when fully pressed */
+    transform: translate(4px, 4px); /* Further press */
+}
+
+.pixel-button:disabled {
+    background-color: #666;
+    color: #aaa;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* New: Group for Play and Settings buttons */
+.button-group {
     display: flex;
-    align-items: center;
+    justify-content: center; /* Center the buttons horizontally */
+    align-items: center; /* Align them vertically */
+    gap: 15px; /* Space between buttons */
+    margin-top: 40px; /* Space above the button group */
+}
+
+/* Make general small buttons smaller (applies to settings and back buttons) */
+.small-button {
+    padding: 10px 15px; /* Slightly smaller padding */
+    font-size: 0.8em; /* Slightly smaller font size */
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.6); /* Adjusted shadow */
+}
+
+.small-button:hover {
+    box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.6);
+    transform: translate(2px, 2px);
+}
+
+.small-button:active {
+    box-shadow: none;
+    transform: translate(3px, 3px);
+}
+
+/* Specific style for buttons that are *just* an icon (like home/settings) */
+.icon-button {
+    padding: 6px 9px; /* Even smaller padding for square-ish icon buttons */
+    font-size: 1.1em; /* Adjusted icon font size to fit smaller button */
+}
+
+.icon-button i {
+    text-shadow: none; /* Remove text shadow for cleaner icon */
+}
+
+
+/* Remove margin-top from buttons within a group, as the group handles it */
+.button-group .pixel-button {
+    margin-top: 0;
+}
+
+/* --- Screen Management --- */
+.screen {
+    display: none;
+    position: relative; /* Essential for absolute positioning of children */
+    padding-bottom: 30px;
+    padding-top: 40px; /* Ensure space for top-left button */
+}
+
+.screen.active {
+    display: block;
+}
+
+/* Position the back button in the game screen (TOP-LEFT) */
+.top-left {
+    position: absolute;
+    top: 10px; /* Closer to the top edge */
+    left: 10px; /* Closer to the left edge */
+    margin-top: 0; /* Override any default margin */
+    z-index: 20; /* Ensure it's on top of titles etc. */
+}
+
+
+/* --- Game Screen Specifics --- */
+.score-display {
+    font-size: 1.4em;
+    margin-bottom: 25px;
+    color: #f1c40f;
+    text-shadow: 2px 2px 0 #b38a0b;
+    display: flex;
     justify-content: center;
-    font-weight: bold;
-    color: #444;
-    font-size: 1.5rem;
-  }
-  
-  .fret {
+    align-items: center;
+    gap: 30px;
+}
+
+.time-display.hidden {
+    display: none;
+}
+
+#fretboard-container {
+    background-color: #8B4513;
+    border: 4px solid #5a2e0a;
+    border-radius: 0;
     position: relative;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    margin: 0 auto 30px auto;
+    height: 250px;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr); /* 12 equal fret spaces */
+    grid-template-rows: repeat(6, 1fr); /* 6 string rows for click areas */
+    gap: 0; /* No gaps between grid cells */
+    overflow: hidden; /* Keep elements inside borders */
+    box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.5); /* Pixel shadow for fretboard */
+}
+
+/* Fret bars - now separate elements, positioned over the grid */
+.fret-bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px; /* Fret bar thickness */
+    background-color: #7f8c8d; /* Gray metal color for frets */
+    z-index: 2; /* On top of wood, behind strings */
+    box-shadow: 1px 0px 0px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+}
+
+/* Position each fret bar */
+.fret-bar-1 { left: calc((100% / 12) * 1); } /* End of 1st fret space */
+.fret-bar-2 { left: calc((100% / 12) * 2); }
+.fret-bar-3 { left: calc((100% / 12) * 3); }
+.fret-bar-4 { left: calc((100% / 12) * 4); }
+.fret-bar-5 { left: calc((100% / 12) * 5); }
+.fret-bar-6 { left: calc((100% / 12) * 6); }
+.fret-bar-7 { left: calc((100% / 12) * 7); }
+.fret-bar-8 { left: calc((100% / 12) * 8); }
+.fret-bar-9 { left: calc((100% / 12) * 9); }
+.fret-bar-10 { left: calc((100% / 12) * 10); }
+.fret-bar-11 { left: calc((100% / 12) * 11); }
+.fret-bar-12 { left: calc((100% / 12) * 12); }
+
+
+/* String lines - now separate elements, positioned over the grid and fret bars */
+.string-line {
+    position: absolute;
+    left: 0;
+    right: 0; /* Extends across the whole fretboard */
+    background-color: #bdc3c7; /* String color */
+    z-index: 3; /* On top of fret bars */
+    box-shadow: 0 1px 1px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+}
+
+/* Position each string line and apply thickness */
+/* The 'top' value positions the string in the middle of its corresponding grid row */
+.string-line-0 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 1.1px); height: 2.2px; } /* Low E */
+.string-line-1 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.9px); height: 1.8px; } /* A String */
+.string-line-2 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.75px); height: 1.5px; } /* D String */
+.string-line-3 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.6px); height: 1.2px; } /* G String */
+.string-line-4 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 0.5px); height: 1.0px; } /* B String */
+.string-line-5 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 0.4px); height: 0.8px; } /* High E */
+
+
+/* Fret Markers (dots) */
+.fretboard-marker {
+    position: absolute; /* Positioned relative to #fretboard-container */
+    background-color: #FFD700; /* Gold color for visibility */
+    border: 2px solid #b89300; /* Pixel border for markers */
+    border-radius: 50%;
+    width: 18px; /* Slightly smaller for pixel look */
+    height: 18px;
+    top: 50%; /* Vertically center */
+    transform: translate(-50%, -50%); /* Adjust for marker size */
+    z-index: 4; /* On top of strings */
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.3); /* Pixel shadow */
+}
+
+/* Specific positions for single dot markers, centered in their fret space */
+/* CORRECTED CALCULATIONS BELOW */
+.fretboard-marker-3 { left: calc((100% / 12) * 2 + ((100% / 12) / 2)); } /* Should be Fret 3 */
+.fretboard-marker-5 { left: calc((100% / 12) * 4 + ((100% / 12) / 2)); } /* Should be Fret 5 */
+.fretboard-marker-7 { left: calc((100% / 12) * 6 + ((100% / 12) / 2)); } /* Should be Fret 7 */
+.fretboard-marker-9 { left: calc((100% / 12) * 8 + ((100% / 12) / 2)); } /* Should be Fret 9 */
+
+/* Double dots for 12th fret */
+.fretboard-marker-12-top,
+.fretboard-marker-12-bottom {
+    position: absolute;
+    background-color: #FFD700;
+    border: 2px solid #b89300;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    z-index: 4;
+    /* CORRECTED CALCULATION BELOW */
+    left: calc((100% / 12) * 11 + ((100% / 12) / 2)); /* Should be Fret 12 */
+    transform: translateX(-50%);
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.3);
+}
+.fretboard-marker-12-top { top: 30%; }
+.fretboard-marker-12-bottom { top: 70%; }
+
+
+.fret-cell {
+    position: relative;
     display: flex;
-    align-items: center;
     justify-content: center;
-  }
-  
-  .fret:nth-child(odd) {
-    background-color: #eaeaea; /* Alternating colors for frets */
-  }
-  
-  /* Note Circle */
-  .note-circle {
+    align-items: center;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0);
+    z-index: 5;
+}
+
+
+.note-dot {
+    width: 28px;
+    height: 28px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(0,0,0,0.5);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: transparent;
+    transition: background-color 0.05s ease, color 0.05s ease, border-color 0.05s ease;
+    z-index: 10;
+    box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.4);
+}
+
+.note-dot:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(0,0,0,0.8);
+}
+
+.note-dot.active {
+    background-color: #3498db;
+    color: #ecf0f1;
+    border-color: #2980b9;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.5);
+    transform: translate(-1px, -1px);
+}
+
+.note-dot.correct-guess {
+    background-color: #2ecc71;
+    color: #fff;
+    border-color: #27ae60;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.5);
+    transform: translate(-1px, -1px);
+}
+
+.note-dot.incorrect-guess {
+    background-color: #e74c3c;
+    color: #fff;
+    border-color: #c0392b;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.5);
+    transform: translate(-1px, -1px);
+}
+
+.challenge-area {
+    margin: 30px 0;
+    font-size: 1.6em;
+    color: #ffeb3b;
+    text-shadow: 2px 2px 0 #b38a0b;
+}
+
+#target-note {
+    color: #ffeb3b;
+}
+
+.feedback-message {
+    margin-top: 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+    min-height: 25px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.feedback-message.correct {
+    color: #2ecc71;
+}
+
+.feedback-message.incorrect {
+    color: #e74c3c;
+}
+
+/* --- Settings Screen Styles --- */
+.settings-options {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.setting-group {
+    margin-bottom: 30px;
+}
+
+.setting-label {
+    font-size: 1.2em;
+    color: #ecf0f1;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.radio-label {
+    display: inline-block;
+    margin: 0 15px;
+    cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
     width: 20px;
     height: 20px;
-    background-color: #ffd700; /* Yellow for visibility */
-    border-radius: 50%;
-    display: none;
-  }
-
-  /* String Selection Styling */
-.string-selection {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-  margin-bottom: 20px;
+    border: 2px solid #bdc3c7;
+    border-radius: 0;
+    background-color: #2c3e50;
+    vertical-align: middle;
+    margin-right: 5px;
+    box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.5);
+    transition: background-color 0.1s ease, border-color 0.1s ease;
 }
 
-.string-selection label {
-  font-size: 1rem;
-  font-weight: normal;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.radio-label input[type="radio"]:checked {
+    background-color: #27ae60;
+    border-color: #1b6c3e;
 }
 
-
-/* Special Markers for Frets 3, 5, 7, 9 */
-.fret[data-fret="3"]::before,
-.fret[data-fret="5"]::before,
-.fret[data-fret="7"]::before,
-.fret[data-fret="9"]::before {
-  content: '';
-  width: 12px;
-  height: 12px;
-  background-color: #333;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+.radio-label input[type="radio"]:hover {
+    border-color: #fff;
 }
-
-/* Special Double Marker for the 12th Fret */
-.fret[data-fret="12"]::before,
-.fret[data-fret="12"]::after {
-  content: '';
-  width: 12px;
-  height: 12px;
-  background-color: #333;
-  border-radius: 50%;
-  position: absolute;
-  top: 10%;
-}
-
-.fret[data-fret="12"]::after {
-  top: 70%; /* Position the second dot lower for the 12th fret */
-}
-
-  
-  /* Button and Input Styling */
-  button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 10px;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  input[type="text"] {
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-    transition: border-color 0.3s ease;
-  }
-  
-  input[type="text"]:focus {
-    border-color: #4CAF50;
-    outline: none;
-  }
-  
-  /* Feedback Styling */
-  #feedback {
-    font-size: 1rem;
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    max-width: 300px;
-    text-align: center;
-  }
-  
-  #feedback.correct {
-    color: #4CAF50;
-    background-color: #e8f5e9;
-    border: 1px solid #4CAF50;
-  }
-  
-  #feedback.incorrect {
-    color: #d32f2f;
-    background-color: #fdecea;
-    border: 1px solid #d32f2f;
-  }
-  
-  /* Answer Input Section */
-  .answer-section {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  /* Mobile Responsive */
-  @media (max-width: 600px) {
-    .fretboard {
-      grid-template-columns: 60px repeat(12, 35px);
-      gap: 3px;
-    }
-  
-    .fret {
-      width: 35px;
-      height: 35px;
-    }
-  
-    .note-circle {
-      width: 15px;
-      height: 15px;
-    }
-  
-    button {
-      padding: 8px 15px;
-      font-size: 0.9rem;
-    }
-  
-    input[type="text"] {
-      padding: 8px;
-      font-size: 0.9rem;
-    }
-  }
-  
