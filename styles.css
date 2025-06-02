@@ -1,80 +1,79 @@
 /* Import Google Fonts for pixel style */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* --- General Pixel Styling --- */
+/* --- BASE STYLES (Applies to ALL screen sizes, including smallest mobile) --- */
 body {
-    font-family: 'Press Start 2P', cursive; /* Apply pixel font */
+    font-family: 'Press Start 2P', cursive;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #34495e; /* Darker, slightly blue background */
-    color: #ecf0f1; /* Light pixel text color */
+    background-color: #34495e;
+    color: #ecf0f1;
     margin: 0;
-    padding: 20px;
+    padding: 5px; /* Very small padding for tight screens */
     box-sizing: border-box;
-    image-rendering: optimizeSpeed; /* For older browsers */
-    image-rendering: -moz-crisp-edges; /* For Firefox */
-    image-rendering: -webkit-optimize-contrast; /* For Chrome, Safari */
-    image-rendering: pixelated; /* Standard for modern browsers */
-    -ms-interpolation-mode: nearest-neighbor; /* For IE */
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
 }
 
 .container {
-    background-color: #2c3e50; /* Dark blue container */
-    border: 4px solid #1a252f; /* Thick pixel border */
-    border-radius: 0; /* Sharp corners */
-    box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.4); /* Pixel shadow */
-    padding: 30px;
+    background-color: #2c3e50;
+    border: 2px solid #1a252f; /* Even thinner border */
+    border-radius: 0;
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.4); /* Smaller shadow */
+    padding: 10px; /* Reduced padding */
     text-align: center;
-    width: 100%;
-    max-width: 1200px; /* !!! INCREASED MAX-WIDTH HERE !!! */
-    box-sizing: content-box; /* Revert to default box model for pixel art sizing */
+    width: 100%; /* Take full width available */
+    max-width: 320px; /* Constrain max-width for very small phones */
+    box-sizing: content-box;
 }
 
-/* Pixel font class */
 .pixel-text {
     font-family: 'Press Start 2P', cursive;
-    text-shadow: 2px 2px 0 #000; /* Subtle pixel shadow for text */
+    text-shadow: 1px 1px 0 #000;
 }
 
 .title {
-    color: #ffeb3b; /* Bright yellow title */
-    font-size: 2.5em;
-    margin-bottom: 20px;
+    color: #ffeb3b;
+    font-size: 1.2em; /* Smallest title for mobile */
+    margin-bottom: 8px;
 }
 
 .subtitle {
-    font-size: 1.2em;
-    margin-bottom: 40px;
+    font-size: 0.7em;
+    margin-bottom: 15px;
 }
 
 /* Pixel Button Style */
 .pixel-button {
-    background-color: #27ae60; /* Green */
+    background-color: #27ae60;
     color: white;
-    padding: 15px 30px;
+    padding: 8px 15px; /* Reduced padding */
     border: none;
-    border-radius: 0; /* Sharp corners */
-    font-size: 1.3em;
+    border-radius: 0;
+    font-size: 0.8em; /* Smaller font size */
     cursor: pointer;
     font-family: 'Press Start 2P', cursive;
-    text-shadow: 2px 2px 0 #1e8449; /* Darker shadow for button text */
-    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.6); /* Button pixel shadow */
-    transition: all 0.05s ease-out; /* Small transition for pixel feel */
-    margin-top: 20px; /* Default margin for single buttons */
+    text-shadow: 1px 1px 0 #1e8449;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.6); /* Smaller shadow */
+    transition: all 0.05s ease-out;
+    margin-top: 10px; /* Reduced margin */
 }
 
 .pixel-button:hover {
-    background-color: #229954; /* Darker green on hover */
-    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.6); /* Smaller shadow on hover (pressed effect) */
-    transform: translate(2px, 2px); /* Simulate button press */
+    background-color: #229954;
+    box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.6);
+    transform: translate(1px, 1px);
 }
 
 .pixel-button:active {
-    background-color: #1b6c3e; /* Even darker green */
-    box-shadow: none; /* No shadow when fully pressed */
-    transform: translate(4px, 4px); /* Further press */
+    background-color: #1b6c3e;
+    box-shadow: none;
+    transform: translate(2px, 2px);
 }
 
 .pixel-button:disabled {
@@ -85,80 +84,79 @@ body {
     transform: none;
 }
 
-/* New: Group for Play and Settings buttons */
 .button-group {
     display: flex;
-    justify-content: center; /* Center the buttons horizontally */
-    align-items: center; /* Align them vertically */
-    gap: 15px; /* Space between buttons */
-    margin-top: 40px; /* Space above the button group */
+    flex-wrap: wrap; /* Allow buttons to wrap if screen is very narrow */
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* Reduced gap */
+    margin-top: 15px; /* Reduced margin */
 }
 
-/* Make general small buttons smaller (applies to settings and back buttons) */
 .small-button {
-    padding: 10px 15px; /* Slightly smaller padding */
-    font-size: 0.8em; /* Slightly smaller font size */
-    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.6); /* Adjusted shadow */
+    padding: 6px 10px; /* Adjusted padding */
+    font-size: 0.6em; /* Adjusted font size */
+    box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.6);
 }
 
 .small-button:hover {
     box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.6);
-    transform: translate(2px, 2px);
+    transform: translate(1px, 1px);
 }
 
 .small-button:active {
     box-shadow: none;
-    transform: translate(3px, 3px);
+    transform: translate(2px, 2px);
 }
 
-/* Specific style for buttons that are *just* an icon (like home/settings) */
 .icon-button {
-    padding: 6px 9px; /* Even smaller padding for square-ish icon buttons */
-    font-size: 1.1em; /* Adjusted icon font size to fit smaller button */
+    padding: 4px 7px; /* Smallest padding for icon buttons */
+    font-size: 0.9em; /* Adjusted icon font size */
 }
-
 .icon-button i {
-    text-shadow: none; /* Remove text shadow for cleaner icon */
+    text-shadow: none;
 }
 
-
-/* Remove margin-top from buttons within a group, as the group handles it */
 .button-group .pixel-button {
     margin-top: 0;
 }
 
-/* --- Screen Management --- */
 .screen {
     display: none;
-    position: relative; /* Essential for absolute positioning of children */
-    padding-bottom: 30px;
-    padding-top: 40px; /* Ensure space for top-left button */
+    position: relative;
+    padding-bottom: 15px; /* Reduced padding */
+    padding-top: 25px; /* Adjusted to prevent top button overlap */
 }
 
 .screen.active {
     display: block;
 }
 
-/* Position the back button in the game screen (TOP-LEFT) */
 .top-left {
     position: absolute;
-    top: 10px; /* Closer to the top edge */
-    left: 10px; /* Closer to the left edge */
-    margin-top: 0; /* Override any default margin */
-    z-index: 20; /* Ensure it's on top of titles etc. */
+    top: 5px;
+    left: 5px;
+    margin-top: 0;
+    z-index: 20;
 }
-
 
 /* --- Game Screen Specifics --- */
 .score-display {
-    font-size: 1.4em;
-    margin-bottom: 25px;
+    font-size: 1em; /* Smaller font */
+    margin-bottom: 10px; /* Reduced margin */
     color: #f1c40f;
-    text-shadow: 2px 2px 0 #b38a0b;
+    text-shadow: 1px 1px 0 #b38a0b;
     display: flex;
+    flex-direction: column; /* Stack score and time vertically on smallest screens */
     justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 5px; /* Minimal gap when stacked */
+}
+
+/* Ensure 'Time' is on its own line if needed */
+.score-display #time {
+    display: block; /* Make time element take full width of its container */
+    margin-top: 5px; /* Small space between score and time */
 }
 
 .time-display.hidden {
@@ -167,32 +165,32 @@ body {
 
 #fretboard-container {
     background-color: #8B4513;
-    border: 4px solid #5a2e0a;
+    border: 2px solid #5a2e0a; /* Thinner border */
     border-radius: 0;
     position: relative;
-    margin: 0 auto 30px auto;
-    height: 250px;
+    margin: 0 auto 15px auto; /* Reduced margin */
+    height: 150px; /* Smaller fixed height for mobile */
     display: grid;
-    grid-template-columns: repeat(12, 1fr); /* 12 equal fret spaces */
-    grid-template-rows: repeat(6, 1fr); /* 6 string rows for click areas */
-    gap: 0; /* No gaps between grid cells */
-    overflow: hidden; /* Keep elements inside borders */
-    box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.5); /* Pixel shadow for fretboard */
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 0;
+    overflow: hidden;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.5); /* Smaller shadow */
 }
 
-/* Fret bars - now separate elements, positioned over the grid */
+/* Fret bars */
 .fret-bar {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 3px; /* Fret bar thickness */
-    background-color: #7f8c8d; /* Gray metal color for frets */
-    z-index: 2; /* On top of wood, behind strings */
-    box-shadow: 1px 0px 0px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+    width: 1px; /* Even thinner fret bars for mobile */
+    background-color: #7f8c8d;
+    z-index: 2;
+    box-shadow: 0.5px 0px 0px rgba(0,0,0,0.2);
 }
 
-/* Position each fret bar */
-.fret-bar-1 { left: calc((100% / 12) * 1); } /* End of 1st fret space */
+/* Position each fret bar (relative positioning remains same) */
+.fret-bar-1 { left: calc((100% / 12) * 1); }
 .fret-bar-2 { left: calc((100% / 12) * 2); }
 .fret-bar-3 { left: calc((100% / 12) * 3); }
 .fret-bar-4 { left: calc((100% / 12) * 4); }
@@ -206,66 +204,63 @@ body {
 .fret-bar-12 { left: calc((100% / 12) * 12); }
 
 
-/* String lines - now separate elements, positioned over the grid and fret bars */
+/* String lines */
 .string-line {
     position: absolute;
     left: 0;
-    right: 0; /* Extends across the whole fretboard */
-    background-color: #bdc3c7; /* String color */
-    z-index: 3; /* On top of fret bars */
-    box-shadow: 0 1px 1px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+    right: 0;
+    background-color: #bdc3c7;
+    z-index: 3;
+    box-shadow: 0 0.25px 0.25px rgba(0,0,0,0.2); /* Even thinner shadow */
 }
 
-/* Position each string line and apply thickness */
-/* The 'top' value positions the string in the middle of its corresponding grid row */
-.string-line-0 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 1.1px); height: 2.2px; } /* Low E */
-.string-line-1 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.9px); height: 1.8px; } /* A String */
-.string-line-2 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.75px); height: 1.5px; } /* D String */
-.string-line-3 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.6px); height: 1.2px; } /* G String */
-.string-line-4 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 0.5px); height: 1.0px; } /* B String */
-.string-line-5 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 0.4px); height: 0.8px; } /* High E */
+/* Position each string line and apply thickness (even smaller for mobile) */
+.string-line-0 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 0.7px); height: 1.4px; } /* Low E */
+.string-line-1 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.6px); height: 1.2px; } /* A String */
+.string-line-2 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.5px); height: 1.0px; } /* D String */
+.string-line-3 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.4px); height: 0.8px; } /* G String */
+.string-line-4 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 0.3px); height: 0.6px; } /* B String */
+.string-line-5 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 0.2px); height: 0.4px; } /* High E */
 
 
 /* Fret Markers (dots) */
 .fretboard-marker {
-    position: absolute; /* Positioned relative to #fretboard-container */
-    background-color: #FFD700; /* Gold color for visibility */
-    border: 2px solid #b89300; /* Pixel border for markers */
+    position: absolute;
+    background-color: #FFD700;
+    border: 1px solid #b89300;
     border-radius: 50%;
-    width: 18px; /* Slightly smaller for pixel look */
-    height: 18px;
-    top: 50%; /* Vertically center */
-    transform: translate(-50%, -50%); /* Adjust for marker size */
-    z-index: 4; /* On top of strings */
-    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.3); /* Pixel shadow */
+    width: 12px; /* Even smaller markers */
+    height: 12px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    box-shadow: 0.5px 0.5px 0px 0px rgba(0, 0, 0, 0.2);
 }
 
-/* Specific positions for single dot markers, centered in their fret space */
-/* CORRECTED CALCULATIONS BELOW */
-.fretboard-marker-3 { left: calc((100% / 12) * 2 + ((100% / 12) / 2)); } /* Should be Fret 3 */
-.fretboard-marker-5 { left: calc((100% / 12) * 4 + ((100% / 12) / 2)); } /* Should be Fret 5 */
-.fretboard-marker-7 { left: calc((100% / 12) * 6 + ((100% / 12) / 2)); } /* Should be Fret 7 */
-.fretboard-marker-9 { left: calc((100% / 12) * 8 + ((100% / 12) / 2)); } /* Should be Fret 9 */
+/* Position for markers (using previous corrected values) */
+.fretboard-marker-3 { left: calc((100% / 12) * 2 + ((100% / 12) / 2)); }
+.fretboard-marker-5 { left: calc((100% / 12) * 4 + ((100% / 12) / 2)); }
+.fretboard-marker-7 { left: calc((100% / 12) * 6 + ((100% / 12) / 2)); }
+.fretboard-marker-9 { left: calc((100% / 12) * 8 + ((100% / 12) / 2)); }
 
-/* Double dots for 12th fret */
 .fretboard-marker-12-top,
 .fretboard-marker-12-bottom {
     position: absolute;
     background-color: #FFD700;
-    border: 2px solid #b89300;
+    border: 1px solid #b89300;
     border-radius: 50%;
-    width: 18px;
-    height: 18px;
+    width: 12px;
+    height: 12px;
     z-index: 4;
-    /* CORRECTED CALCULATION BELOW */
-    left: calc((100% / 12) * 11 + ((100% / 12) / 2)); /* Should be Fret 12 */
+    left: calc((100% / 12) * 11 + ((100% / 12) / 2));
     transform: translateX(-50%);
-    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 0.5px 0.5px 0px 0px rgba(0, 0, 0, 0.2);
 }
 .fretboard-marker-12-top { top: 30%; }
 .fretboard-marker-12-bottom { top: 70%; }
 
 
+/* Note dots (clickable areas) */
 .fret-cell {
     position: relative;
     display: flex;
@@ -276,22 +271,21 @@ body {
     z-index: 5;
 }
 
-
 .note-dot {
-    width: 28px;
-    height: 28px;
+    width: 20px; /* Even smaller note dots for mobile */
+    height: 20px;
     background-color: rgba(255, 255, 255, 0.2);
-    border: 2px solid rgba(0,0,0,0.5);
+    border: 1px solid rgba(0,0,0,0.5);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 0.8em;
+    font-size: 0.6em; /* Even smaller font for note name */
     font-weight: bold;
     color: transparent;
     transition: background-color 0.05s ease, color 0.05s ease, border-color 0.05s ease;
     z-index: 10;
-    box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0.5px 0.5px 0px 0px rgba(0, 0, 0, 0.3);
 }
 
 .note-dot:hover {
@@ -303,7 +297,7 @@ body {
     background-color: #3498db;
     color: #ecf0f1;
     border-color: #2980b9;
-    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.4);
     transform: translate(-1px, -1px);
 }
 
@@ -311,7 +305,7 @@ body {
     background-color: #2ecc71;
     color: #fff;
     border-color: #27ae60;
-    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.4);
     transform: translate(-1px, -1px);
 }
 
@@ -319,15 +313,15 @@ body {
     background-color: #e74c3c;
     color: #fff;
     border-color: #c0392b;
-    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.4);
     transform: translate(-1px, -1px);
 }
 
 .challenge-area {
-    margin: 30px 0;
-    font-size: 1.6em;
+    margin: 15px 0; /* Reduced margin */
+    font-size: 1.1em; /* Adjusted font size */
     color: #ffeb3b;
-    text-shadow: 2px 2px 0 #b38a0b;
+    text-shadow: 1px 1px 0 #b38a0b;
 }
 
 #target-note {
@@ -335,63 +329,275 @@ body {
 }
 
 .feedback-message {
-    margin-top: 15px;
-    font-size: 1.2em;
+    margin-top: 8px; /* Reduced margin */
+    font-size: 0.9em; /* Adjusted font size */
     font-weight: bold;
-    min-height: 25px;
-    text-shadow: 2px 2px 0 #000;
-}
-
-.feedback-message.correct {
-    color: #2ecc71;
-}
-
-.feedback-message.incorrect {
-    color: #e74c3c;
+    min-height: 18px; /* Adjusted minimum height */
+    text-shadow: 1px 1px 0 #000;
 }
 
 /* --- Settings Screen Styles --- */
 .settings-options {
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .setting-group {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .setting-label {
-    font-size: 1.2em;
+    font-size: 0.9em; /* Adjusted font size */
     color: #ecf0f1;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     display: block;
 }
 
 .radio-label {
-    display: inline-block;
-    margin: 0 15px;
+    display: block; /* Stack radio buttons vertically for mobile */
+    margin: 8px 0; /* Adjusted margin */
     cursor: pointer;
+    font-size: 0.8em; /* Adjusted font size for radio labels */
 }
 
 .radio-label input[type="radio"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #bdc3c7;
-    border-radius: 0;
-    background-color: #2c3e50;
-    vertical-align: middle;
-    margin-right: 5px;
-    box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.5);
-    transition: background-color 0.1s ease, border-color 0.1s ease;
+    width: 16px; /* Even smaller radio button */
+    height: 16px;
+    border: 1px solid #bdc3c7;
+    box-shadow: 0.5px 0.5px 0px 0px rgba(0,0,0,0.5);
 }
 
-.radio-label input[type="radio"]:checked {
-    background-color: #27ae60;
-    border-color: #1b6c3e;
+/* --- MEDIA QUERIES FOR LARGER SCREENS (MOBILE LANDSCAPE, TABLET, DESKTOP) --- */
+
+/* For slightly larger mobile screens (e.g., landscape phones, small tablets) */
+@media (min-width: 401px) {
+    .container {
+        max-width: 500px; /* Allow container to grow slightly */
+        padding: 15px;
+        border: 3px solid #1a252f;
+        box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.4);
+    }
+    body {
+        padding: 10px;
+    }
+    .title {
+        font-size: 1.8em;
+    }
+    .subtitle {
+        font-size: 1em;
+    }
+    .pixel-button {
+        padding: 10px 20px;
+        font-size: 1em;
+        box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.6);
+    }
+    .small-button {
+        padding: 8px 12px;
+        font-size: 0.8em;
+        box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.6);
+    }
+    .icon-button {
+        padding: 6px 9px;
+        font-size: 1.1em;
+    }
+    .button-group {
+        gap: 10px;
+    }
+    .screen {
+        padding-bottom: 20px;
+        padding-top: 30px;
+    }
+    .score-display {
+        font-size: 1.2em;
+        flex-direction: row; /* Layout Score and Time horizontally again */
+        gap: 20px;
+    }
+    .score-display #time {
+        display: inline; /* Make time element inline again */
+        margin-top: 0;
+    }
+    #fretboard-container {
+        height: 180px;
+        border: 3px solid #5a2e0a;
+        box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.5);
+    }
+    .fret-bar {
+        width: 2px;
+    }
+    .string-line-0 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 0.9px); height: 1.8px; }
+    .string-line-1 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.75px); height: 1.5px; }
+    .string-line-2 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.6px); height: 1.2px; }
+    .string-line-3 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.5px); height: 1.0px; }
+    .string-line-4 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 0.4px); height: 0.8px; }
+    .string-line-5 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 0.3px); height: 0.6px; }
+    .fretboard-marker {
+        width: 15px;
+        height: 15px;
+        border: 1px solid #b89300;
+        box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.2);
+    }
+    .fretboard-marker-12-top, .fretboard-marker-12-bottom {
+        width: 15px;
+        height: 15px;
+        border: 1px solid #b89300;
+        box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.2);
+    }
+    .note-dot {
+        width: 25px;
+        height: 25px;
+        border: 1px solid rgba(0,0,0,0.5);
+        font-size: 0.7em;
+        box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.3);
+    }
+    .challenge-area {
+        font-size: 1.3em;
+    }
+    .feedback-message {
+        font-size: 1em;
+    }
+    .settings-options {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .setting-group {
+        margin-bottom: 20px;
+    }
+    .setting-label {
+        font-size: 1.1em;
+    }
+    .radio-label {
+        font-size: 1em;
+    }
+    .radio-label input[type="radio"] {
+        width: 18px;
+        height: 18px;
+    }
 }
 
-.radio-label input[type="radio"]:hover {
-    border-color: #fff;
+
+/* --- DESKTOP/LARGER TABLET STYLES (Overrides for screens wider than 768px) --- */
+@media (min-width: 769px) {
+    .container {
+        max-width: 900px; /* Original desktop width */
+        padding: 30px;
+        border: 4px solid #1a252f;
+        box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.4);
+    }
+    body {
+        padding: 20px;
+    }
+    .pixel-text {
+        text-shadow: 2px 2px 0 #000;
+    }
+    .title {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+    }
+    .subtitle {
+        font-size: 1.2em;
+        margin-bottom: 40px;
+    }
+    .pixel-button {
+        padding: 15px 30px;
+        font-size: 1.3em;
+        text-shadow: 2px 2px 0 #1e8449;
+        box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.6);
+        margin-top: 20px;
+    }
+    .small-button {
+        padding: 12px 18px;
+        font-size: 0.9em;
+        box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.6);
+    }
+    .icon-button {
+        padding: 6px 9px;
+        font-size: 1.1em;
+    }
+    .button-group {
+        gap: 15px;
+        margin-top: 40px;
+    }
+    .screen {
+        padding-bottom: 30px;
+        padding-top: 40px;
+    }
+    .top-left {
+        top: 10px;
+        left: 10px;
+    }
+    .score-display {
+        font-size: 1.4em;
+        margin-bottom: 25px;
+        text-shadow: 2px 2px 0 #b38a0b;
+        gap: 30px;
+    }
+    .score-display #time {
+        display: inline; /* Back to inline for desktop */
+        margin-top: 0;
+    }
+    #fretboard-container {
+        border: 4px solid #5a2e0a;
+        margin: 0 auto 30px auto;
+        height: 250px;
+        box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.5);
+    }
+    .fret-bar {
+        width: 3px;
+    }
+    .string-line-0 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 1.1px); height: 2.2px; }
+    .string-line-1 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.9px); height: 1.8px; }
+    .string-line-2 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.75px); height: 1.5px; }
+    .string-line-3 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.6px); height: 1.2px; }
+    .string-line-4 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 0.5px); height: 1.0px; }
+    .string-line-5 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 0.4px); height: 0.8px; }
+    .fretboard-marker {
+        border: 2px solid #b89300;
+        width: 18px;
+        height: 18px;
+        box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.3);
+    }
+    .fretboard-marker-12-top, .fretboard-marker-12-bottom {
+        border: 2px solid #b89300;
+        width: 18px;
+        height: 18px;
+        box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.3);
+    }
+    .note-dot {
+        width: 28px;
+        height: 28px;
+        border: 2px solid rgba(0,0,0,0.5);
+        font-size: 0.8em;
+        box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.4);
+    }
+    .challenge-area {
+        margin: 30px 0;
+        font-size: 1.6em;
+        text-shadow: 2px 2px 0 #b38a0b;
+    }
+    .feedback-message {
+        margin-top: 15px;
+        font-size: 1.2em;
+        min-height: 25px;
+        text-shadow: 2px 2px 0 #000;
+    }
+    .settings-options {
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    .setting-group {
+        margin-bottom: 30px;
+    }
+    .setting-label {
+        font-size: 1.2em;
+        margin-bottom: 15px;
+    }
+    .radio-label {
+        display: inline-block;
+        margin: 0 15px;
+    }
+    .radio-label input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #bdc3c7;
+    }
 }
