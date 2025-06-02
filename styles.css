@@ -28,23 +28,25 @@ body {
     padding: 10px; /* Reduced padding */
     text-align: center;
     width: 100%; /* Take full width available */
-    max-width: 320px; /* Constrain max-width for very small phones */
+    max-width: 320px; /* Constrain max-width for very small phones like iPhone SE/5 */
     box-sizing: content-box;
 }
 
 .pixel-text {
     font-family: 'Press Start 2P', cursive;
-    text-shadow: 1px 1px 0 #000;
+    text-shadow: 1px 1px 0 #000; /* Smaller text shadow */
+    word-wrap: break-word; /* Allow long words to break for narrow screens */
 }
 
 .title {
     color: #ffeb3b;
-    font-size: 1.2em; /* Smallest title for mobile */
+    font-size: 1.1em; /* Even smaller title for very small mobile */
     margin-bottom: 8px;
+    line-height: 1.2; /* Adjust line height for better spacing */
 }
 
 .subtitle {
-    font-size: 0.7em;
+    font-size: 0.6em; /* Even smaller subtitle */
     margin-bottom: 15px;
 }
 
@@ -52,16 +54,16 @@ body {
 .pixel-button {
     background-color: #27ae60;
     color: white;
-    padding: 8px 15px; /* Reduced padding */
+    padding: 8px 15px;
     border: none;
     border-radius: 0;
     font-size: 0.8em; /* Smaller font size */
     cursor: pointer;
     font-family: 'Press Start 2P', cursive;
     text-shadow: 1px 1px 0 #1e8449;
-    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.6); /* Smaller shadow */
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.6);
     transition: all 0.05s ease-out;
-    margin-top: 10px; /* Reduced margin */
+    margin-top: 10px;
 }
 
 .pixel-button:hover {
@@ -86,16 +88,16 @@ body {
 
 .button-group {
     display: flex;
-    flex-wrap: wrap; /* Allow buttons to wrap if screen is very narrow */
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 8px; /* Reduced gap */
-    margin-top: 15px; /* Reduced margin */
+    gap: 8px;
+    margin-top: 15px;
 }
 
 .small-button {
-    padding: 6px 10px; /* Adjusted padding */
-    font-size: 0.6em; /* Adjusted font size */
+    padding: 6px 10px;
+    font-size: 0.6em;
     box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.6);
 }
 
@@ -110,8 +112,8 @@ body {
 }
 
 .icon-button {
-    padding: 4px 7px; /* Smallest padding for icon buttons */
-    font-size: 0.9em; /* Adjusted icon font size */
+    padding: 4px 7px;
+    font-size: 0.9em; /* Adjusted icon font size relative to current 0.6em base */
 }
 .icon-button i {
     text-shadow: none;
@@ -124,8 +126,8 @@ body {
 .screen {
     display: none;
     position: relative;
-    padding-bottom: 15px; /* Reduced padding */
-    padding-top: 25px; /* Adjusted to prevent top button overlap */
+    padding-bottom: 15px;
+    padding-top: 25px;
 }
 
 .screen.active {
@@ -142,22 +144,29 @@ body {
 
 /* --- Game Screen Specifics --- */
 .score-display {
-    font-size: 1em; /* Smaller font */
-    margin-bottom: 10px; /* Reduced margin */
+    font-size: 0.9em; /* Main score/time font size */
+    margin-bottom: 10px;
     color: #f1c40f;
     text-shadow: 1px 1px 0 #b38a0b;
     display: flex;
-    flex-direction: column; /* Stack score and time vertically on smallest screens */
+    flex-direction: column; /* Force stack on smallest screens */
     justify-content: center;
     align-items: center;
     gap: 5px; /* Minimal gap when stacked */
 }
 
-/* Ensure 'Time' is on its own line if needed */
+/* Specific styling for the 'Time' span */
 .score-display #time {
-    display: block; /* Make time element take full width of its container */
-    margin-top: 5px; /* Small space between score and time */
+    display: block; /* Ensure it takes its own line */
+    margin-top: 0px; /* No extra margin, gap handles it */
+    white-space: nowrap; /* Prevent "s" from wrapping by itself */
 }
+
+/* Hide the 's' for seconds on very small screens */
+.score-display .time-suffix {
+    display: none;
+}
+
 
 .time-display.hidden {
     display: none;
@@ -165,17 +174,17 @@ body {
 
 #fretboard-container {
     background-color: #8B4513;
-    border: 2px solid #5a2e0a; /* Thinner border */
+    border: 2px solid #5a2e0a;
     border-radius: 0;
     position: relative;
-    margin: 0 auto 15px auto; /* Reduced margin */
-    height: 150px; /* Smaller fixed height for mobile */
+    margin: 0 auto 15px auto;
+    height: 150px;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(6, 1fr);
     gap: 0;
     overflow: hidden;
-    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.5); /* Smaller shadow */
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.5);
 }
 
 /* Fret bars */
@@ -183,7 +192,7 @@ body {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 1px; /* Even thinner fret bars for mobile */
+    width: 1px;
     background-color: #7f8c8d;
     z-index: 2;
     box-shadow: 0.5px 0px 0px rgba(0,0,0,0.2);
@@ -211,7 +220,7 @@ body {
     right: 0;
     background-color: #bdc3c7;
     z-index: 3;
-    box-shadow: 0 0.25px 0.25px rgba(0,0,0,0.2); /* Even thinner shadow */
+    box-shadow: 0 0.25px 0.25px rgba(0,0,0,0.2);
 }
 
 /* Position each string line and apply thickness (even smaller for mobile) */
@@ -229,7 +238,7 @@ body {
     background-color: #FFD700;
     border: 1px solid #b89300;
     border-radius: 50%;
-    width: 12px; /* Even smaller markers */
+    width: 12px;
     height: 12px;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -272,7 +281,7 @@ body {
 }
 
 .note-dot {
-    width: 20px; /* Even smaller note dots for mobile */
+    width: 20px;
     height: 20px;
     background-color: rgba(255, 255, 255, 0.2);
     border: 1px solid rgba(0,0,0,0.5);
@@ -318,8 +327,8 @@ body {
 }
 
 .challenge-area {
-    margin: 15px 0; /* Reduced margin */
-    font-size: 1.1em; /* Adjusted font size */
+    margin: 10px 0; /* Reduced margin */
+    font-size: 0.9em; /* Adjusted font size */
     color: #ffeb3b;
     text-shadow: 1px 1px 0 #b38a0b;
 }
@@ -329,10 +338,10 @@ body {
 }
 
 .feedback-message {
-    margin-top: 8px; /* Reduced margin */
-    font-size: 0.9em; /* Adjusted font size */
+    margin-top: 5px; /* Reduced margin */
+    font-size: 0.7em; /* Adjusted font size */
     font-weight: bold;
-    min-height: 18px; /* Adjusted minimum height */
+    min-height: 15px; /* Adjusted minimum height */
     text-shadow: 1px 1px 0 #000;
 }
 
@@ -347,7 +356,7 @@ body {
 }
 
 .setting-label {
-    font-size: 0.9em; /* Adjusted font size */
+    font-size: 0.9em;
     color: #ecf0f1;
     margin-bottom: 8px;
     display: block;
@@ -355,24 +364,22 @@ body {
 
 .radio-label {
     display: block; /* Stack radio buttons vertically for mobile */
-    margin: 8px 0; /* Adjusted margin */
+    margin: 8px 0;
     cursor: pointer;
-    font-size: 0.8em; /* Adjusted font size for radio labels */
+    font-size: 0.8em;
 }
 
 .radio-label input[type="radio"] {
-    width: 16px; /* Even smaller radio button */
+    width: 16px;
     height: 16px;
     border: 1px solid #bdc3c7;
     box-shadow: 0.5px 0.5px 0px 0px rgba(0,0,0,0.5);
 }
 
-/* --- MEDIA QUERIES FOR LARGER SCREENS (MOBILE LANDSCAPE, TABLET, DESKTOP) --- */
-
-/* For slightly larger mobile screens (e.g., landscape phones, small tablets) */
-@media (min-width: 401px) {
+/* --- MEDIA QUERIES FOR SLIGHTLY LARGER MOBILE SCREENS (e.g., iPhone 6/7/8 Plus, landscape phones) --- */
+@media (min-width: 375px) { /* Standard iPhone 6/7/8 width is 375px */
     .container {
-        max-width: 500px; /* Allow container to grow slightly */
+        max-width: 360px; /* Allow container to grow slightly */
         padding: 15px;
         border: 3px solid #1a252f;
         box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.4);
@@ -381,24 +388,24 @@ body {
         padding: 10px;
     }
     .title {
-        font-size: 1.8em;
+        font-size: 1.3em;
     }
     .subtitle {
-        font-size: 1em;
+        font-size: 0.8em;
     }
     .pixel-button {
         padding: 10px 20px;
-        font-size: 1em;
+        font-size: 0.9em;
         box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.6);
     }
     .small-button {
         padding: 8px 12px;
-        font-size: 0.8em;
+        font-size: 0.7em;
         box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.6);
     }
     .icon-button {
-        padding: 6px 9px;
-        font-size: 1.1em;
+        padding: 5px 8px;
+        font-size: 1em;
     }
     .button-group {
         gap: 10px;
@@ -408,16 +415,18 @@ body {
         padding-top: 30px;
     }
     .score-display {
-        font-size: 1.2em;
-        flex-direction: row; /* Layout Score and Time horizontally again */
-        gap: 20px;
+        font-size: 1.1em; /* Slightly larger score/time */
+        gap: 8px; /* Slightly larger gap when stacked */
     }
     .score-display #time {
-        display: inline; /* Make time element inline again */
+        display: block; /* Still stack time vertically */
         margin-top: 0;
     }
+    .score-display .time-suffix {
+        display: inline; /* Show 's' again if space allows */
+    }
     #fretboard-container {
-        height: 180px;
+        height: 165px; /* Slightly taller fretboard */
         border: 3px solid #5a2e0a;
         box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.5);
     }
@@ -450,10 +459,12 @@ body {
         box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.3);
     }
     .challenge-area {
-        font-size: 1.3em;
+        font-size: 1.1em;
+        margin: 15px 0;
     }
     .feedback-message {
-        font-size: 1em;
+        font-size: 0.9em;
+        margin-top: 10px;
     }
     .settings-options {
         margin-top: 30px;
@@ -466,7 +477,7 @@ body {
         font-size: 1.1em;
     }
     .radio-label {
-        font-size: 1em;
+        font-size: 0.9em;
     }
     .radio-label input[type="radio"] {
         width: 18px;
@@ -475,10 +486,10 @@ body {
 }
 
 
-/* --- DESKTOP/LARGER TABLET STYLES (Overrides for screens wider than 768px) --- */
+/* --- DESKTOP/LARGER TABLET STYLES (Overrides for screens wider than 769px) --- */
 @media (min-width: 769px) {
     .container {
-        max-width: 900px; /* Original desktop width */
+        max-width: 900px;
         padding: 30px;
         border: 4px solid #1a252f;
         box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.4);
@@ -529,11 +540,16 @@ body {
         font-size: 1.4em;
         margin-bottom: 25px;
         text-shadow: 2px 2px 0 #b38a0b;
+        display: flex; /* Revert to flex row on desktop */
+        flex-direction: row;
         gap: 30px;
     }
     .score-display #time {
-        display: inline; /* Back to inline for desktop */
+        display: inline; /* Make time element inline again */
         margin-top: 0;
+    }
+    .score-display .time-suffix {
+        display: inline; /* Show 's' again */
     }
     #fretboard-container {
         border: 4px solid #5a2e0a;
