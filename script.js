@@ -1,144 +1,270 @@
-const fretboard = document.querySelector('.fretboard');
-const feedbackElement = document.getElementById('feedback');
-let correctNote; // Store the correct musical note (with sharp and flat options)
-let score = 0; // Initialize score
+document.addEventListener('DOMContentLoaded', () => {
+    const fretboardContainer = document.getElementById('fretboard-container');
+    const scoreDisplay = document.getElementById('score');
+    const timeDisplay = document.getElementById('time');
+    const timeDisplayContainer = timeDisplay.parentNode;
+    const targetNoteDisplay = document.getElementById('target-note');
+    const feedbackMessage = document.getElementById('feedback');
+    const gameStartButton = document.getElementById('start-button'); // Renamed from gameStartButton to gameActionButton for clarity below
+    const playButton = document.getElementById('play-button');
+    const settingsButton = document.getElementById('settings-button');
+    const backButton = document.getElementById('back-button');
+    const backToMainButton = document.getElementById('back-to-main-button');
+    const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
+    const backgroundMusic = document.getElementById('background-music');
 
-// Define musical notes in order (using sharps only for simplicity)
-const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const startScreen = document.getElementById('start-screen');
+    const settingsScreen = document.getElementById('settings-screen');
+    const gameScreen = document.getElementById('game-screen');
 
-// Base notes for each string (6 to 1)
-const stringBaseNotes = {
-  6: 'E', // Low E
-  5: 'A',
-  4: 'D',
-  3: 'G',
-  2: 'B',
-  1: 'E'  // High E
-};
+    const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const TUNING = ['E', 'A', 'D', 'G', 'B', 'E'];
+    const NUM_FRETS_DISPLAYED = 12;
 
-// Create a map for enharmonic equivalents
-const enharmonicMap = {
-  'C#': ['C#', 'D♭'],
-  'D#': ['D#', 'E♭'],
-  'F#': ['F#', 'G♭'],
-  'G#': ['G#', 'A♭'],
-  'A#': ['A#', 'B♭']
-};
+    let score = 0;
+    let timeLeft = 60;
+    let gameInterval;
+    let currentTargetNoteIndex;
 
-// Initialize fretboard layout without open notes (fret 0)
-function createFretboard() {
-  fretboard.innerHTML = '';
-  for (let string = 6; string >= 1; string--) {
-    const stringLabel = document.createElement('div');
-    stringLabel.classList.add('string-label');
-    stringLabel.textContent = `${stringBaseNotes[string]}`;
-    fretboard.appendChild(stringLabel);
+    let isTimedGame = true;
 
-    // Start from fret 1 to exclude open notes
-    for (let fret = 1; fret <= 12; fret++) {
-      const fretDiv = document.createElement('div');
-      fretDiv.classList.add('fret');
-      fretDiv.dataset.string = string;
-      fretDiv.dataset.fret = fret;
+    // --- Screen Management Functions ---
+    function showScreen(screenElement) {
+        startScreen.classList.remove('active');
+        settingsScreen.classList.remove('active');
+        gameScreen.classList.remove('active');
 
-      const noteCircle = document.createElement('div');
-      noteCircle.classList.add('note-circle');
-      fretDiv.appendChild(noteCircle);
+        screenElement.classList.add('active');
 
-      fretboard.appendChild(fretDiv);
+        if (screenElement === startScreen) {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play().catch(e => console.log("Autoplay prevented:", e));
+            }
+        }
     }
-  }
-}
 
-createFretboard(); // Initialize fretboard display
-
-// Event listener for starting the quiz and resetting game if needed
-document.getElementById('start-quiz').addEventListener('click', () => {
-  score = 0; // Reset score at the start
-  document.getElementById('start-quiz').textContent = 'Play Again';
-  feedbackElement.textContent = ''; // Clear feedback on "Play Again"
-  feedbackElement.className = ''; // Remove any feedback styling
-  document.getElementById('guess-note').value = '';
-  startNewRound();
-});
-
-// Get selected strings
-function getSelectedStrings() {
-  const selectedStrings = [];
-  for (let i = 1; i <= 6; i++) {
-    if (document.getElementById(`string-${i}`).checked) {
-      selectedStrings.push(i);
+    // --- Game Logic Functions ---
+    function getNoteName(stringIndex, fretNumber) {
+        const openStringNoteIndex = NOTES.indexOf(TUNING[stringIndex]);
+        if (openStringNoteIndex === -1) {
+            console.error("Invalid tuning note:", TUNING[stringIndex]);
+            return null;
+        }
+        const noteIndex = (openStringNoteIndex + fretNumber) % 12;
+        return NOTES[noteIndex];
     }
-  }
-  return selectedStrings;
-}
 
-// Start a new round by generating a random note and updating the UI
-function startNewRound() {
-  const selectedStrings = getSelectedStrings();
-  if (selectedStrings.length === 0) {
-    feedbackElement.textContent = 'Please select at least one string.';
-    return;
-  }
-  generateRandomNote(selectedStrings);
-}
+    function createFretboard() {
+        fretboardContainer.innerHTML = '';
 
-// Generate a random note and store the correct answer in both sharp and flat formats
-function generateRandomNote(strings) {
-  const randomString = strings[Math.floor(Math.random() * strings.length)];
-  const randomFret = Math.floor(Math.random() * 12) + 1; // Now ensures frets 1-12 only
+        for (let f = 1; f <= NUM_FRETS_DISPLAYED; f++) {
+            const fretBar = document.createElement('div');
+            fretBar.classList.add('fret-bar', `fret-bar-${f}`);
+            fretboardContainer.appendChild(fretBar);
+        }
 
-  // Determine the correct musical note in both sharp and flat formats
-  correctNote = calculateNoteOnFret(randomString, randomFret);
+        for (let s = 0; s < TUNING.length; s++) {
+            const stringLine = document.createElement('div');
+            stringLine.classList.add('string-line', `string-line-${s}`);
+            fretboardContainer.appendChild(stringLine);
+        }
 
-  // Debugging output to verify the correct note
-  console.log(`Generated note on ${stringBaseNotes[randomString]} String, Fret ${randomFret}: ${correctNote.join(' or ')}`);
+        const markerFrets = [3, 5, 7, 9];
+        markerFrets.forEach(fretNum => {
+            const marker = document.createElement('div');
+            marker.className = `fretboard-marker fretboard-marker-${fretNum}`;
+            fretboardContainer.appendChild(marker);
+        });
 
-  // Show the note on the fretboard
-  displayNoteOnFretboard(randomString, randomFret);
+        const marker12top = document.createElement('div');
+        marker12top.className = 'fretboard-marker-12-top';
+        fretboardContainer.appendChild(marker12top);
 
-  // Set feedback for guessing
-  feedbackElement.textContent = `Score: ${score} - Guess the musical note on ${stringBaseNotes[randomString]} String, Fret ${randomFret}. Type your answer below.`;
-}
+        const marker12bottom = document.createElement('div');
+        marker12bottom.className = 'fretboard-marker-12-bottom';
+        fretboardContainer.appendChild(marker12bottom);
 
-// Calculate the note on a specific string and fret and provide both sharp and flat equivalents
-function calculateNoteOnFret(string, fret) {
-  const baseNote = stringBaseNotes[string];
-  const baseIndex = notes.indexOf(baseNote);
-  const noteIndex = (baseIndex + fret) % notes.length;
-  const note = notes[noteIndex];
+        for (let s = 0; s < TUNING.length; s++) {
+            for (let f = 1; f <= NUM_FRETS_DISPLAYED; f++) {
+                const fretCellDiv = document.createElement('div');
+                fretCellDiv.classList.add('fret-cell');
+                fretCellDiv.dataset.string = s;
+                fretCellDiv.dataset.fret = f;
 
-  // Return an array with the note in both sharp and flat forms, if applicable
-  return enharmonicMap[note] ? enharmonicMap[note] : [note];
-}
+                fretCellDiv.style.gridRow = s + 1;
+                fretCellDiv.style.gridColumn = f;
 
-// Display the note on the fretboard
-function displayNoteOnFretboard(string, fret) {
-  document.querySelectorAll('.note-circle').forEach(note => note.style.display = 'none');
-  const noteCircle = document.querySelector(`.fret[data-string="${string}"][data-fret="${fret}"] .note-circle`);
-  noteCircle.style.display = 'block';
-}
+                const noteDot = document.createElement('div');
+                noteDot.classList.add('note-dot');
+                noteDot.dataset.note = getNoteName(s, f);
+                fretCellDiv.appendChild(noteDot);
 
-// Event listener for submitting the guess
-document.getElementById('submit-guess').addEventListener('click', () => {
-  const guessedNote = document.getElementById('guess-note').value.trim().toUpperCase();
-  
-  if (guessedNote) {
-    // Check if the guessed note matches any form of the correct note (sharp or flat)
-    if (correctNote.includes(guessedNote)) {
-      score++; // Increase score on correct answer
-      feedbackElement.textContent = `Correct! Score: ${score}. Well done! Starting next round...`;
-      feedbackElement.className = 'correct';
-      setTimeout(startNewRound, 1000); // Automatically start a new round after a short delay
-      document.getElementById('guess-note').value = '';
-    } else {
-      feedbackElement.textContent = `Incorrect. The correct answer was ${correctNote.join(' or ')}. Your score was: ${score}. Click "Play Again" to try from scratch.`;
-      feedbackElement.className = 'incorrect';
-      score = 0; // Reset score on incorrect answer
-      document.getElementById('start-quiz').textContent = 'Play Again';
+                fretCellDiv.addEventListener('click', handleFretClick);
+                fretboardContainer.appendChild(fretCellDiv);
+            }
+        }
     }
-  } else {
-    feedbackElement.textContent = 'Please enter a musical note to submit your guess.';
-    feedbackElement.className = ''; // Clear class for neutral feedback
-  }
+
+    function startGame() {
+        if (gameInterval) {
+            clearInterval(gameInterval); // Clear any existing interval if restarting
+            gameInterval = null;
+        }
+
+        score = 0;
+        timeLeft = 60; // Reset time for timed game
+        scoreDisplay.textContent = score;
+
+        if (isTimedGame) {
+            timeDisplayContainer.classList.remove('hidden-time');
+            timeDisplay.textContent = timeLeft;
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        } else {
+            timeDisplayContainer.classList.add('hidden-time');
+        }
+
+        feedbackMessage.textContent = '';
+        gameStartButton.disabled = false; // Enable button
+        gameStartButton.textContent = 'RESTART GAME'; // Change text to RESTART
+
+        resetFretboardHighlight();
+        nextChallenge();
+    }
+
+    function endGame() {
+        clearInterval(gameInterval);
+        gameInterval = null;
+        targetNoteDisplay.textContent = '_';
+        feedbackMessage.textContent = `GAME OVER! YOUR SCORE: ${score}`;
+        gameStartButton.disabled = false; // Enable button
+        gameStartButton.textContent = 'START GAME'; // Change text back to START
+        resetFretboardHighlight();
+    }
+
+    function resetGame() {
+        if (gameInterval) {
+            clearInterval(gameInterval);
+            gameInterval = null;
+        }
+        score = 0;
+        timeLeft = 60;
+        scoreDisplay.textContent = score;
+        timeDisplay.textContent = timeLeft;
+        feedbackMessage.textContent = '';
+        targetNoteDisplay.textContent = '_';
+        gameStartButton.disabled = false; // Ensure start button is enabled
+        gameStartButton.textContent = 'START GAME'; // Ensure text is START GAME
+        resetFretboardHighlight();
+        timeDisplayContainer.classList.remove('hidden-time');
+    }
+
+    function nextChallenge() {
+        const randomString = Math.floor(Math.random() * TUNING.length);
+        const randomFret = Math.floor(Math.random() * NUM_FRETS_DISPLAYED) + 1;
+
+        currentTargetNoteIndex = NOTES.indexOf(getNoteName(randomString, randomFret));
+        targetNoteDisplay.textContent = NOTES[currentTargetNoteIndex];
+
+        feedbackMessage.textContent = '';
+        resetFretboardHighlight();
+    }
+
+    function resetFretboardHighlight() {
+        document.querySelectorAll('.note-dot').forEach(dot => {
+            dot.classList.remove('active', 'correct-guess', 'incorrect-guess');
+            dot.style.color = 'transparent';
+        });
+    }
+
+    function handleFretClick(event) {
+        if (isTimedGame && timeLeft <= 0 || !gameInterval) return;
+
+        const clickedDot = event.currentTarget.querySelector('.note-dot');
+        const clickedNote = clickedDot.dataset.note;
+        const targetNote = NOTES[currentTargetNoteIndex];
+
+        resetFretboardHighlight();
+
+        clickedDot.style.color = '#fff';
+
+        if (clickedNote === targetNote) {
+            score += 10;
+            feedbackMessage.textContent = 'CORRECT!';
+            feedbackMessage.classList.add('correct');
+            feedbackMessage.classList.remove('incorrect');
+            clickedDot.classList.add('correct-guess');
+            setTimeout(nextChallenge, 500);
+        } else {
+            score -= 5;
+            feedbackMessage.textContent = `INCORRECT! THAT'S A ${clickedNote}.`;
+            feedbackMessage.classList.add('incorrect');
+            feedbackMessage.classList.remove('correct');
+            clickedDot.classList.add('incorrect-guess');
+
+            document.querySelectorAll(`.note-dot[data-note="${targetNote}"]`).forEach(dot => {
+                if (dot !== clickedDot) {
+                    dot.style.color = '#fff';
+                    dot.classList.add('active');
+                }
+            });
+
+            setTimeout(nextChallenge, 1500);
+        }
+        scoreDisplay.textContent = score;
+    }
+
+    // --- Event Listeners ---
+    playButton.addEventListener('click', () => {
+        showScreen(gameScreen);
+        createFretboard();
+        startGame(); // Start game according to current mode
+    });
+
+    settingsButton.addEventListener('click', () => {
+        showScreen(settingsScreen);
+    });
+
+    backButton.addEventListener('click', () => {
+        showScreen(startScreen);
+    });
+
+    backToMainButton.addEventListener('click', () => {
+        resetGame(); // Reset game state before going back
+        showScreen(startScreen);
+    });
+
+    // Handle the game's main action button
+    gameStartButton.addEventListener('click', () => {
+        // If button says 'RESTART GAME', it means a game is active
+        if (gameStartButton.textContent === 'RESTART GAME') {
+            startGame(); // Just restart the game
+        } else { // Button says 'START GAME' (after game over)
+            startGame();
+        }
+    });
+
+    gameModeRadios.forEach(radio => {
+        radio.addEventListener('change', (event) => {
+            isTimedGame = event.target.value === 'timed';
+            if (isTimedGame) {
+                timeDisplayContainer.classList.remove('hidden-time');
+                timeDisplay.textContent = timeLeft;
+            } else {
+                timeDisplayContainer.classList.add('hidden-time');
+            }
+        });
+    });
+
+    // Initial setup
+    showScreen(startScreen);
+    document.querySelector(`input[name="gameMode"][value="${isTimedGame ? 'timed' : 'untimed'}"]`).checked = true;
+    if (!isTimedGame) {
+        timeDisplayContainer.classList.add('hidden-time');
+    }
 });
