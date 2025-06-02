@@ -251,7 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // If timed, only allow if timeLeft > 0.
         if (isTimedGame && timeLeft <= 0 || !gameInterval) return; // Prevent clicks if game is over (timed) or not started
 
-        const clickedDot = event.currentTarget.currentTarget.querySelector('.note-dot'); // Use currentTarget twice to get the .fret-cell, then find .note-dot
+        // FIX: Corrected the access to clickedDot
+        const clickedDot = event.currentTarget.querySelector('.note-dot');
         const clickedNote = clickedDot.dataset.note;
         const targetNote = NOTES[currentTargetNoteIndex];
 
