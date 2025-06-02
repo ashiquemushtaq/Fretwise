@@ -37,10 +37,16 @@ document.addEventListener('DOMContentLoaded', () => {
         screenElement.classList.add('active');
 
         // Music control based on screen
-        if (screenElement === startScreen) {
-            // Attempt to play music when returning to start screen (user interaction often enables this)
+        if (screenElement === gameScreen) {
+            // Play music only when entering the game screen
             if (backgroundMusic.paused) {
-                backgroundMusic.play().catch(e => console.log("Autoplay prevented:", e));
+                backgroundMusic.play().catch(e => console.log("Music autoplay prevented:", e));
+            }
+        } else {
+            // Pause music when navigating away from the game screen (to start or settings)
+            if (!backgroundMusic.paused) {
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0; // Optional: Reset music to start for next game
             }
         }
     }
@@ -245,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // If timed, only allow if timeLeft > 0.
         if (isTimedGame && timeLeft <= 0 || !gameInterval) return; // Prevent clicks if game is over (timed) or not started
 
-        const clickedDot = event.currentTarget.querySelector('.note-dot');
+        const clickedDot = event.currentTarget.currentTarget.querySelector('.note-dot'); // Use currentTarget twice to get the .fret-cell, then find .note-dot
         const clickedNote = clickedDot.dataset.note;
         const targetNote = NOTES[currentTargetNoteIndex];
 
@@ -303,8 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle the game's main action button (Start Game / Restart Game)
     gameStartButton.addEventListener('click', () => {
-        // No need to check textContent directly here as startGame() handles initial setup and restarts
-        startGame();
+        startGame(); // Calling startGame directly handles both initial start and restart
     });
 
     // Listen for changes in game mode radio buttons (Timed/Untimed)
