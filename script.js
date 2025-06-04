@@ -2,15 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const fretboardContainer = document.getElementById('fretboard-container');
     const scoreDisplay = document.getElementById('score');
     const timeDisplay = document.getElementById('time');
-    const timeDisplayContainer = timeDisplay.parentNode; // This is the 'score-display' div
+    const timeDisplayContainer = timeDisplay.parentNode;
     const targetNoteDisplay = document.getElementById('target-note');
     const feedbackMessage = document.getElementById('feedback');
     const gameStartButton = document.getElementById('start-button');
     const playButton = document.getElementById('play-button');
     const settingsButton = document.getElementById('settings-button');
-    const backButton = document.getElementById('back-button'); // Settings screen back button
-    const backToMainButton = document.getElementById('back-to-main-button'); // Game screen back button
+    const backButton = document.getElementById('back-button');
+    const backToMainButton = document.getElementById('back-to-main-button');
     const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
+    const fretRangeRadios = document.querySelectorAll('input[name="fretRange"]'); // NEW
+    const stringsCheckboxes = document.querySelectorAll('input[name="strings"]'); // NEW
     const backgroundMusic = document.getElementById('background-music');
 
     const startScreen = document.getElementById('start-screen');
@@ -19,14 +21,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     const TUNING = ['E', 'A', 'D', 'G', 'B', 'E']; // Standard EADGBe tuning (Low E is index 0, High E is index 5)
-    const NUM_FRETS_DISPLAYED = 12; // Number of *fret spaces* to display (Fret 1 to Fret 12)
+    const NUM_FRETS_DISPLAYED = 12;
 
     let score = 0;
-    let timeLeft = 60; // seconds
+    let timeLeft = 60;
     let gameInterval;
     let currentTargetNoteIndex;
 
-    let isTimedGame = true; // State variable for game mode
+    let isTimedGame = true;
+    let selectedFretRange = { min: 1, max: 5 }; // Default: Frets 1-5
+    let selectedStrings = [0, 1, 2, 3, 4, 5]; // Default: All strings (indices 0-5)
 
     // --- Screen Management Functions ---
     function showScreen(screenElement) {
@@ -36,28 +40,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         screenElement.classList.add('active');
 
-        // Music control based on screen
         if (screenElement === gameScreen) {
-            // Play music only when entering the game screen
             if (backgroundMusic.paused) {
                 backgroundMusic.play().catch(e => console.log("Music autoplay prevented:", e));
             }
         } else {
-            // Pause music when navigating away from the game screen (to start or settings)
             if (!backgroundMusic.paused) {
                 backgroundMusic.pause();
-                backgroundMusic.currentTime = 0; // Optional: Reset music to start for next game
+                backgroundMusic.currentTime = 0;
             }
         }
     }
 
     // --- Game Logic Functions ---
-    /**
-     * Calculates the note name for a given string and fret.
-     * @param {number} stringIndex - The index of the string (0 for Low E, 5 for High E).
-     * @param {number} fretNumber - The fret number (1 to NUM_FRETS_DISPLAYED).
-     * @returns {string} The note name (e.g., 'A', 'C#').
-     */
     function getNoteName(stringIndex, fretNumber) {
         const openStringNoteIndex = NOTES.indexOf(TUNING[stringIndex]);
         if (openStringNoteIndex === -1) {
@@ -68,29 +63,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return NOTES[noteIndex];
     }
 
-    /**
-     * Dynamically creates the guitar fretboard elements (fret bars, strings, markers, clickable cells).
-     */
     function createFretboard() {
-        fretboardContainer.innerHTML = ''; // Clear existing fretboard
+        fretboardContainer.innerHTML = '';
 
-        // Add FRET BARS as separate elements (positioned absolutely)
         for (let f = 1; f <= NUM_FRETS_DISPLAYED; f++) {
             const fretBar = document.createElement('div');
             fretBar.classList.add('fret-bar', `fret-bar-${f}`);
             fretboardContainer.appendChild(fretBar);
         }
 
-        // Add STRING LINES as separate elements (positioned absolutely)
-        // Note: TUNING array is Low E to High E. We want top of fretboard to be Low E.
-        // So, string-line-0 corresponds to TUNING[0] (Low E)
         for (let s = 0; s < TUNING.length; s++) {
             const stringLine = document.createElement('div');
             stringLine.classList.add('string-line', `string-line-${s}`);
             fretboardContainer.appendChild(stringLine);
         }
 
-        // Add fret markers (dots) dynamically
         const markerFrets = [3, 5, 7, 9];
         markerFrets.forEach(fretNum => {
             const marker = document.createElement('div');
@@ -98,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
             fretboardContainer.appendChild(marker);
         });
 
-        // Add double markers for 12th fret
         const marker12top = document.createElement('div');
         marker12top.className = 'fretboard-marker-12-top';
         fretboardContainer.appendChild(marker12top);
@@ -107,19 +93,15 @@ document.addEventListener('DOMContentLoaded', () => {
         marker12bottom.className = 'fretboard-marker-12-bottom';
         fretboardContainer.appendChild(marker12bottom);
 
-
-        // Create grid cells for each string and fret position (these are the clickable areas)
-        // They sit on top of the bars and strings
-        for (let s = 0; s < TUNING.length; s++) { // s for string (row)
-            for (let f = 1; f <= NUM_FRETS_DISPLAYED; f++) { // f for fret (column)
+        for (let s = 0; s < TUNING.length; s++) {
+            for (let f = 1; f <= NUM_FRETS_DISPLAYED; f++) {
                 const fretCellDiv = document.createElement('div');
                 fretCellDiv.classList.add('fret-cell');
-                fretCellDiv.dataset.string = s; // Store original string index
-                fretCellDiv.dataset.fret = f;   // Store the actual fret number
+                fretCellDiv.dataset.string = s;
+                fretCellDiv.dataset.fret = f;
 
-                // Set grid position for the clickable cell
-                fretCellDiv.style.gridRow = s + 1; // Grid rows are 1-indexed (Low E is row 1)
-                fretCellDiv.style.gridColumn = f;   // Grid columns are 1-indexed
+                fretCellDiv.style.gridRow = s + 1;
+                fretCellDiv.style.gridColumn = f;
 
                 const noteDot = document.createElement('div');
                 noteDot.classList.add('note-dot');
@@ -130,30 +112,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 fretboardContainer.appendChild(fretCellDiv);
             }
         }
+        updateFretboardVisuals(); // NEW: Call this after creating the fretboard
     }
 
-    /**
-     * Starts a new game or restarts the current one.
-     */
+    // NEW: Function to update fretboard visual based on current settings
+    function updateFretboardVisuals() {
+        document.querySelectorAll('.fret-cell').forEach(cell => {
+            const stringIndex = parseInt(cell.dataset.string);
+            const fretNumber = parseInt(cell.dataset.fret);
+
+            const isFretInSelection = fretNumber >= selectedFretRange.min && fretNumber <= selectedFretRange.max;
+            const isStringInSelection = selectedStrings.includes(stringIndex);
+
+            if (isFretInSelection && isStringInSelection) {
+                cell.classList.remove('disabled-fret');
+                cell.style.pointerEvents = 'auto'; // Make clickable
+            } else {
+                cell.classList.add('disabled-fret');
+                cell.style.pointerEvents = 'none'; // Make non-clickable
+            }
+        });
+    }
+
     function startGame() {
-        // Stop any running game before starting a new one
         if (gameInterval) {
             clearInterval(gameInterval);
             gameInterval = null;
         }
 
         score = 0;
-        timeLeft = 60; // Reset time for timed game
+        timeLeft = 60;
         scoreDisplay.textContent = score;
 
-        // --- Control visibility of the Time display and 's' suffix ---
-        const timeSuffix = document.querySelector('.time-suffix'); // Get the 's' span
+        const timeSuffix = document.querySelector('.time-suffix');
 
         if (isTimedGame) {
             timeDisplayContainer.classList.remove('hidden-time');
             timeDisplay.textContent = timeLeft;
-            // Hide 's' for very small screens (defined by media query breakpoint, or just check window.innerWidth)
-            if (window.innerWidth <= 400) { // Assuming 400px is the breakpoint for hiding 's'
+            if (window.innerWidth <= 400) {
                 if (timeSuffix) timeSuffix.style.display = 'none';
             } else {
                 if (timeSuffix) timeSuffix.style.display = 'inline';
@@ -166,36 +162,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, 1000);
         } else {
-            timeDisplayContainer.classList.add('hidden-time'); // Hide the whole "Time: XXs" part
-            if (timeSuffix) timeSuffix.style.display = 'none'; // Ensure 's' is hidden even if parent is not display:none
-            // No interval set for untimed game
+            timeDisplayContainer.classList.add('hidden-time');
+            if (timeSuffix) timeSuffix.style.display = 'none';
         }
-        // --- End of Time display control section ---
 
         feedbackMessage.textContent = '';
-        gameStartButton.disabled = false; // Enable button
-        gameStartButton.textContent = 'RESTART GAME'; // Change text to RESTART
+        gameStartButton.disabled = false;
+        gameStartButton.textContent = 'RESTART GAME';
 
-        resetFretboardHighlight(); // Clear any previous highlights
+        resetFretboardHighlight();
         nextChallenge(); // Generate the first challenge
+        updateFretboardVisuals(); // Ensure visuals are set correctly at game start
     }
 
-    /**
-     * Ends the current game.
-     */
     function endGame() {
         clearInterval(gameInterval);
         gameInterval = null;
         targetNoteDisplay.textContent = '_';
         feedbackMessage.textContent = `GAME OVER! YOUR SCORE: ${score}`;
-        gameStartButton.disabled = false; // Enable button
-        gameStartButton.textContent = 'START GAME'; // Change text back to START
-        resetFretboardHighlight(); // Clear any remaining highlights
+        gameStartButton.disabled = false;
+        gameStartButton.textContent = 'START GAME';
+        resetFretboardHighlight();
     }
 
-    /**
-     * Resets the game state completely, typically when returning to the main menu.
-     */
     function resetGame() {
         if (gameInterval) {
             clearInterval(gameInterval);
@@ -204,61 +193,71 @@ document.addEventListener('DOMContentLoaded', () => {
         score = 0;
         timeLeft = 60;
         scoreDisplay.textContent = score;
-        timeDisplay.textContent = timeLeft; // Reset time display text
+        timeDisplay.textContent = timeLeft;
         feedbackMessage.textContent = '';
         targetNoteDisplay.textContent = '_';
-        gameStartButton.disabled = false; // Ensure start button is enabled for new game
-        gameStartButton.textContent = 'START GAME'; // Ensure text is START GAME
-        resetFretboardHighlight(); // Clear all highlights
-
-        // Ensure time display is visible when returning to start screen (in case user wants to start timed game)
+        gameStartButton.disabled = false;
+        gameStartButton.textContent = 'START GAME';
+        resetFretboardHighlight();
         timeDisplayContainer.classList.remove('hidden-time');
-        const timeSuffix = document.querySelector('.time-suffix'); // Get the 's' span
-        if (timeSuffix) timeSuffix.style.display = 'inline'; // Show 's' by default on main menu
+        const timeSuffix = document.querySelector('.time-suffix');
+        if (timeSuffix) timeSuffix.style.display = 'inline';
+        updateFretboardVisuals(); // Ensure visuals are reset correctly
     }
 
-    /**
-     * Generates the next note identification challenge.
-     */
+    // NEW: Modified nextChallenge to respect selected strings and frets
     function nextChallenge() {
-        // Generate a random string and fret for the challenge
-        const randomString = Math.floor(Math.random() * TUNING.length);
-        const randomFret = Math.floor(Math.random() * NUM_FRETS_DISPLAYED) + 1; // +1 because frets start from 1
+        const availableChallenges = [];
 
-        currentTargetNoteIndex = NOTES.indexOf(getNoteName(randomString, randomFret));
-        targetNoteDisplay.textContent = NOTES[currentTargetNoteIndex];
+        // Populate available challenges based on selected strings and frets
+        for (const stringIdx of selectedStrings) {
+            for (let fretNum = selectedFretRange.min; fretNum <= selectedFretRange.max; fretNum++) {
+                availableChallenges.push({
+                    string: stringIdx,
+                    fret: fretNum,
+                    note: getNoteName(stringIdx, fretNum)
+                });
+            }
+        }
 
-        feedbackMessage.textContent = ''; // Clear previous feedback
-        resetFretboardHighlight(); // Clear highlights from previous challenge
+        if (availableChallenges.length === 0) {
+            targetNoteDisplay.textContent = 'N/A';
+            feedbackMessage.textContent = 'Select strings/frets in settings!';
+            return;
+        }
+
+        // Pick a random challenge from the available ones
+        const randomChallenge = availableChallenges[Math.floor(Math.random() * availableChallenges.length)];
+
+        currentTargetNoteIndex = NOTES.indexOf(randomChallenge.note);
+        targetNoteDisplay.textContent = randomChallenge.note;
+
+        feedbackMessage.textContent = '';
+        resetFretboardHighlight();
     }
 
-    /**
-     * Clears all temporary visual highlights from the fretboard.
-     */
     function resetFretboardHighlight() {
         document.querySelectorAll('.note-dot').forEach(dot => {
             dot.classList.remove('active', 'correct-guess', 'incorrect-guess');
-            dot.style.color = 'transparent'; // Hide note names again
+            dot.style.color = 'transparent';
         });
     }
 
-    /**
-     * Handles a click event on a fret. Checks if the clicked note is correct.
-     * @param {Event} event - The click event object.
-     */
     function handleFretClick(event) {
-        // If untimed, allow clicks even if `timeLeft` theoretically hits 0.
-        // If timed, only allow if timeLeft > 0.
-        if (isTimedGame && timeLeft <= 0 || !gameInterval) return; // Prevent clicks if game is over (timed) or not started
+        if (isTimedGame && timeLeft <= 0 || !gameInterval) return;
 
-        // FIX: Corrected the access to clickedDot
+        // Ensure the clicked fret is NOT disabled
+        if (event.currentTarget.classList.contains('disabled-fret')) {
+            return; // Ignore clicks on disabled frets
+        }
+
         const clickedDot = event.currentTarget.querySelector('.note-dot');
         const clickedNote = clickedDot.dataset.note;
         const targetNote = NOTES[currentTargetNoteIndex];
 
-        resetFretboardHighlight(); // Clear previous highlights
+        resetFretboardHighlight();
 
-        clickedDot.style.color = '#fff'; // Show the note name on the clicked fret
+        clickedDot.style.color = '#fff';
 
         if (clickedNote === targetNote) {
             score += 10;
@@ -266,24 +265,28 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackMessage.classList.add('correct');
             feedbackMessage.classList.remove('incorrect');
             clickedDot.classList.add('correct-guess');
-            setTimeout(nextChallenge, 500); // Short delay for feedback
+            setTimeout(nextChallenge, 500);
         } else {
-            score -= 5; // Penalty for incorrect guess
+            score -= 5;
             feedbackMessage.textContent = `INCORRECT! THAT'S A ${clickedNote}.`;
             feedbackMessage.classList.add('incorrect');
             feedbackMessage.classList.remove('correct');
             clickedDot.classList.add('incorrect-guess');
 
-            // Show ALL correct notes temporarily by highlighting them
             document.querySelectorAll(`.note-dot[data-note="${targetNote}"]`).forEach(dot => {
-                // Ensure we don't accidentally override the incorrect-guess color on the clicked dot
-                if (dot !== clickedDot) {
-                    dot.style.color = '#fff'; // Reveal correct notes
-                    dot.classList.add('active'); // Highlight correct notes
+                const dotFretNumber = parseInt(dot.parentNode.dataset.fret);
+                const dotStringIndex = parseInt(dot.parentNode.dataset.string);
+
+                // Only highlight correct notes if they are in the *currently selected* range
+                if (dot !== clickedDot &&
+                    dotFretNumber >= selectedFretRange.min && dotFretNumber <= selectedFretRange.max &&
+                    selectedStrings.includes(dotStringIndex)) {
+                    dot.style.color = '#fff';
+                    dot.classList.add('active');
                 }
             });
 
-            setTimeout(nextChallenge, 1500); // Longer delay to see error and correct answers
+            setTimeout(nextChallenge, 1500);
         }
         scoreDisplay.textContent = score;
     }
@@ -291,8 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Listeners ---
     playButton.addEventListener('click', () => {
         showScreen(gameScreen);
-        createFretboard(); // Generate fretboard when game screen is shown
-        startGame(); // Start game according to current mode
+        createFretboard();
+        startGame();
     });
 
     settingsButton.addEventListener('click', () => {
@@ -301,52 +304,88 @@ document.addEventListener('DOMContentLoaded', () => {
 
     backButton.addEventListener('click', () => { // Settings screen back button
         showScreen(startScreen);
+        // Important: Re-apply visual settings when returning from settings
+        updateFretboardVisuals();
     });
 
     backToMainButton.addEventListener('click', () => { // Game screen back button
-        resetGame(); // Reset game state before going back to main menu
+        resetGame();
         showScreen(startScreen);
+        updateFretboardVisuals(); // Ensure visuals are correct when returning to main menu
     });
 
-    // Handle the game's main action button (Start Game / Restart Game)
     gameStartButton.addEventListener('click', () => {
-        startGame(); // Calling startGame directly handles both initial start and restart
+        startGame();
     });
 
-    // Listen for changes in game mode radio buttons (Timed/Untimed)
     gameModeRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
             isTimedGame = event.target.value === 'timed';
             const timeSuffix = document.querySelector('.time-suffix');
 
-            // Update display based on selection
             if (isTimedGame) {
                 timeDisplayContainer.classList.remove('hidden-time');
-                timeDisplay.textContent = timeLeft; // Show current time (resets to 60 for visual context)
-                // Control 's' visibility based on screen size
+                timeDisplay.textContent = timeLeft;
                 if (window.innerWidth <= 400) {
                     if (timeSuffix) timeSuffix.style.display = 'none';
                 } else {
                     if (timeSuffix) timeSuffix.style.display = 'inline';
                 }
             } else {
-                timeDisplayContainer.classList.add('hidden-time'); // Hide time display
-                if (timeSuffix) timeSuffix.style.display = 'none'; // Ensure 's' is hidden
+                timeDisplayContainer.classList.add('hidden-time');
+                if (timeSuffix) timeSuffix.style.display = 'none';
             }
         });
     });
 
+    // NEW: Event listener for Fret Range radios
+    fretRangeRadios.forEach(radio => {
+        radio.addEventListener('change', (event) => {
+            const range = event.target.value.split('-').map(Number);
+            selectedFretRange = { min: range[0], max: range[1] };
+            updateFretboardVisuals(); // Update visuals immediately
+        });
+    });
+
+    // NEW: Event listener for Strings Checkboxes
+    stringsCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            selectedStrings = [];
+            stringsCheckboxes.forEach((cb, index) => {
+                if (cb.checked) {
+                    selectedStrings.push(index); // Push the string index (0-5)
+                }
+            });
+            updateFretboardVisuals(); // Update visuals immediately
+            // If no strings are selected, potentially show a warning or select all
+            if (selectedStrings.length === 0) {
+                // Optionally: Disable play button, show message, or auto-select all
+                // For now, let's just make sure nextChallenge handles empty array.
+            }
+        });
+    });
+
+
     // --- Initial setup on page load ---
-    showScreen(startScreen); // Show the start screen first
-    // Ensure the radio button state matches the initial `isTimedGame` variable
+    showScreen(startScreen);
     document.querySelector(`input[name="gameMode"][value="${isTimedGame ? 'timed' : 'untimed'}"]`).checked = true;
-    // Set initial visibility of the time display and 's' suffix based on default mode and screen width
-    const timeSuffix = document.querySelector('.time-suffix');
-    if (timeSuffix) {
-        if (!isTimedGame || window.innerWidth <= 400) { // If untimed OR very small screen
-            timeSuffix.style.display = 'none';
-        } else {
-            timeSuffix.style.display = 'inline';
-        }
+    if (!isTimedGame) {
+        timeDisplayContainer.classList.add('hidden-time');
     }
+
+    // Initialize fret range and strings from settings default checked values
+    // Ensure this is done AFTER the DOM is fully loaded and `createFretboard` is called for the first time in `playButton` click
+    const initialFretRange = document.querySelector('input[name="fretRange"]:checked').value.split('-').map(Number);
+    selectedFretRange = { min: initialFretRange[0], max: initialFretRange[1] };
+
+    selectedStrings = [];
+    stringsCheckboxes.forEach((cb, index) => {
+        if (cb.checked) {
+            selectedStrings.push(index);
+        }
+    });
+
+    // We can't call updateFretboardVisuals() here because the fretboard
+    // isn't created yet on page load. It's called when 'Play' is clicked.
+    // However, it's crucial to call it when returning from settings/main menu.
 });
