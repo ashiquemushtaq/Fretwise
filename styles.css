@@ -211,23 +211,35 @@ body {
 .fret-bar-12 { left: calc((100% / 12) * 12); }
 
 
-/* String lines */
+/* String lines - now separate elements, positioned over the grid and fret bars */
 .string-line {
     position: absolute;
     left: 0;
-    right: 0;
-    background-color: #bdc3c7;
-    z-index: 3;
+    right: 0; /* Extends across the whole fretboard */
+    background-color: #bdc3c7; /* String color */
+    z-index: 3; /* On top of fret bars */
     box-shadow: 0 0.25px 0.25px rgba(0,0,0,0.2);
 }
 
-/* Position each string line and apply thickness (even smaller for mobile) */
-.string-line-0 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 0.7px); height: 1.4px; } /* Low E */
-.string-line-1 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.6px); height: 1.2px; } /* A String */
-.string-line-2 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.5px); height: 1.0px; } /* D String */
-.string-line-3 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.4px); height: 0.8px; } /* G String */
-.string-line-4 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 0.3px); height: 0.6px; } /* B String */
-.string-line-5 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 0.2px); height: 0.4px; } /* High E */
+/*
+   String order is mirrored:
+   string-line-0 (Low E) is at gridRow 6 -> GRID_ROW_INDEX_FROM_TOP 5
+   string-line-5 (High E) is at gridRow 1 -> GRID_ROW_INDEX_FROM_TOP 0
+
+   Formula: top: calc((100% / 6) * GRID_ROW_INDEX_FROM_TOP + (100% / 6) / 2 - (HEIGHT / 2))
+*/
+/* High E String (Top-most string in standard tuning) - stringIndex 5 -> GRID_ROW_INDEX_FROM_TOP 0 */
+.string-line-5 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 0.35px); height: 0.7px; } /* Thinnest */
+/* B String - stringIndex 4 -> GRID_ROW_INDEX_FROM_TOP 1 */
+.string-line-4 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.5px); height: 1.0px; }
+/* G String - stringIndex 3 -> GRID_ROW_INDEX_FROM_TOP 2 */
+.string-line-3 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.65px); height: 1.3px; }
+/* D String - stringIndex 2 -> GRID_ROW_INDEX_FROM_TOP 3 */
+.string-line-2 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.8px); height: 1.6px; }
+/* A String - stringIndex 1 -> GRID_ROW_INDEX_FROM_TOP 4 */
+.string-line-1 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 0.95px); height: 1.9px; }
+/* Low E String (Bottom-most string in standard tuning) - stringIndex 0 -> GRID_ROW_INDEX_FROM_TOP 5 */
+.string-line-0 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 1.15px); height: 2.3px; } /* Thickest */
 
 
 /* Fret Markers (dots) */
@@ -276,15 +288,15 @@ body {
     cursor: pointer;
     background-color: rgba(0,0,0,0);
     z-index: 5;
-    transition: opacity 0.3s ease, background-color 0.3s ease; /* Added transition for greying out */
+    transition: opacity 0.3s ease, background-color 0.3s ease;
 }
 
-/* New: Style for disabled (greyed-out) fret cells */
+/* Style for disabled (greyed-out) fret cells */
 .fret-cell.disabled-fret {
-    opacity: 0.3; /* Make it semi-transparent */
-    cursor: not-allowed; /* Change cursor to indicate non-clickable */
-    pointer-events: none; /* Make it truly non-clickable for mouse/touch events */
-    background-color: rgba(0, 0, 0, 0.1); /* Slightly darker overlay for greying out */
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 
@@ -371,7 +383,7 @@ body {
 }
 
 .radio-label, .checkbox-label {
-    display: block; /* Stack radio buttons vertically for mobile */
+    display: block;
     margin: 8px 0;
     cursor: pointer;
     font-size: 0.8em;
@@ -466,12 +478,21 @@ body {
     .fret-bar {
         width: 2px;
     }
-    .string-line-0 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 0.9px); height: 1.8px; }
-    .string-line-1 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.75px); height: 1.5px; }
-    .string-line-2 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.6px); height: 1.2px; }
-    .string-line-3 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.5px); height: 1.0px; }
-    .string-line-4 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 0.4px); height: 0.8px; }
-    .string-line-5 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 0.3px); height: 0.6px; }
+    /* Adjusted string thicknesses for this breakpoint (tighter spacing) */
+    /* High E String (Top-most) - stringIndex 5 -> GRID_ROW_INDEX_FROM_TOP 0 */
+    .string-line-5 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 0.45px); height: 1.0px; }
+    /* B String - stringIndex 4 -> GRID_ROW_INDEX_FROM_TOP 1 */
+    .string-line-4 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.6px); height: 1.3px; }
+    /* G String - stringIndex 3 -> GRID_ROW_INDEX_FROM_TOP 2 */
+    .string-line-3 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.75px); height: 1.6px; }
+    /* D String - stringIndex 2 -> GRID_ROW_INDEX_FROM_TOP 3 */
+    .string-line-2 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.9px); height: 1.9px; }
+    /* A String - stringIndex 1 -> GRID_ROW_INDEX_FROM_TOP 4 */
+    .string-line-1 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 1.05px); height: 2.2px; }
+    /* Low E String (Bottom-most) - stringIndex 0 -> GRID_ROW_INDEX_FROM_TOP 5 */
+    .string-line-0 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 1.25px); height: 2.6px; }
+
+
     .fretboard-marker {
         width: 15px;
         height: 15px;
@@ -510,7 +531,7 @@ body {
         font-size: 1.1em;
     }
     .radio-label, .checkbox-label {
-        display: inline-block; /* Revert to inline for larger mobile/desktop */
+        display: inline-block;
         margin: 0 15px;
         font-size: 0.9em;
         text-align: center;
@@ -580,15 +601,15 @@ body {
         margin-bottom: 25px;
         text-shadow: 2px 2px 0 #b38a0b;
         display: flex;
-        flex-direction: row; /* Revert to flex row on desktop */
+        flex-direction: row;
         gap: 30px;
     }
     .score-display #time {
-        display: inline; /* Make time element inline again */
+        display: inline;
         margin-top: 0;
     }
     .score-display .time-suffix {
-        display: inline; /* Show 's' again */
+        display: inline;
     }
     #fretboard-container {
         border: 4px solid #5a2e0a;
@@ -599,12 +620,21 @@ body {
     .fret-bar {
         width: 3px;
     }
-    .string-line-0 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 1.1px); height: 2.2px; }
-    .string-line-1 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.9px); height: 1.8px; }
-    .string-line-2 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.75px); height: 1.5px; }
-    .string-line-3 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 0.6px); height: 1.2px; }
-    .string-line-4 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 0.5px); height: 1.0px; }
-    .string-line-5 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 0.4px); height: 0.8px; }
+    /* Adjusted string thicknesses for desktop */
+    /* High E String (Top-most) - stringIndex 5 -> GRID_ROW_INDEX_FROM_TOP 0 */
+    .string-line-5 { top: calc((100% / 6) * 0 + (100% / 6) / 2 - 0.5px); height: 1.0px; }
+    /* B String - stringIndex 4 -> GRID_ROW_INDEX_FROM_TOP 1 */
+    .string-line-4 { top: calc((100% / 6) * 1 + (100% / 6) / 2 - 0.7px); height: 1.4px; }
+    /* G String - stringIndex 3 -> GRID_ROW_INDEX_FROM_TOP 2 */
+    .string-line-3 { top: calc((100% / 6) * 2 + (100% / 6) / 2 - 0.85px); height: 1.7px; }
+    /* D String - stringIndex 2 -> GRID_ROW_INDEX_FROM_TOP 3 */
+    .string-line-2 { top: calc((100% / 6) * 3 + (100% / 6) / 2 - 1.05px); height: 2.1px; }
+    /* A String - stringIndex 1 -> GRID_ROW_INDEX_FROM_TOP 4 */
+    .string-line-1 { top: calc((100% / 6) * 4 + (100% / 6) / 2 - 1.25px); height: 2.5px; }
+    /* Low E String (Bottom-most) - stringIndex 0 -> GRID_ROW_INDEX_FROM_TOP 5 */
+    .string-line-0 { top: calc((100% / 6) * 5 + (100% / 6) / 2 - 1.5px); height: 3.0px; }
+
+
     .fretboard-marker {
         border: 2px solid #b89300;
         width: 18px;
